@@ -1,0 +1,72 @@
+{
+  "navbar": {
+    "dropdown": {
+      "login": "Connexion",
+      "logout": "Déconnexion",
+      "admin": "Admin"
+    }
+  },
+  "title": {
+    "libraries": "Librairies",
+    "searchcriteria": "Critères de recherche",
+    "editstructuremap": "Édition de la Structure Map",
+    "editquestionnaire": "Édition du Questionnaire",
+    "questionnaireresponseform": "Formulaire de Réponse au Questionnaire",
+    "error": {
+      "oops": "Oups !",
+      "problem": "Une erreur est survenue !"
+    },
+    "inprogress": {
+      "wip": "Travaux en cours !",
+      "comingsoon": "Bientôt disponible..."
+    },
+    "testplans": "Plan de tests",
+    "testscripts": "Script de tests"
+  },
+  "footer": {
+    "items": {
+      "about": "A propos",
+      "contact": "Contact",
+      "problemtracking": "Suivi de problème"
+    }
+  },
+  "button": {
+    "search": "Rechercher",
+    "reset": "Réinitialiser",
+    "validate": "Envoyer"
+  },
+  "label": {
+    "name": "Nom",
+    "draft": "Brouillon - Draft",
+    "active": "Actif - Active",
+    "retired": "Retiré - Retired",
+    "unknown": "Inconnu - Unknown",
+    "status": "Statut",
+    "generaldescription": "Description générale"
+  },
+  "defaultvalue": {
+    "status": "-- Merci de choisir un statut --"
+  },
+  "text": {
+    "validationalert": "Merci de valider pour recevoir un statut.",
+    "validationreport": "Rapport de Validation",
+    "loading": "En chargement",
+    "questionnaireresponse": "Réponse au Questionnaire",
+    "errorvalidateheader": "Erreur",
+    "errorvalidatetext": "Erreur de validation inconnue",
+    "editortext": "// Écrivez votre code ici...",
+    "outputtext": "Cliquez sur le bouton 'Play' pour voir le résultat ici.",
+    "successsubmitform": "Votre formulaire a été soumis avec succès ! Vous allez être redirigé vers la page d'accueil.",
+    "errorsubmitform": "Une erreur est survenue lors de la soumission de votre formulaire !"
+  },
+  "tooltip": {
+    "disabled": "Non disponible pour le moment",
+    "save": "Enregistrer vos modifications",
+    "actualize": "Actualiser vos modifications",
+    "play": "Effectuer l'opération",
+    "reset": "Réinitialiser",
+    "disabledplaystructuremap": "Enregistrez ou actualisez pour activer ce bouton",
+    "disabledplayquestionnaire": "Activer en cliquant sur le bouton Play de Questionnaire",
+    "check": "Valider votre résultat"
+  }
+}

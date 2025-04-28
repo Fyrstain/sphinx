@@ -1,0 +1,4 @@
+.resizableContainer {
+  display: flex;
+  overflow: hidden;
+}

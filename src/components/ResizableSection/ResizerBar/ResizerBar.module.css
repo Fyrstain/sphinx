@@ -1,0 +1,21 @@
+.noSelectWhenResizing {
+  user-select: none;
+}
+
+.resizerBar {
+  position: relative;
+  right: 0;
+  top: 0;
+  width: 0.5rem;
+  margin-top: 0.2rem;
+  margin-bottom: 0.2rem;
+  cursor: ew-resize;
+  background-color: rgba(0, 0, 0, 0.1);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='30'><path d='M2 0 v30 M5 0 v30 M8 0 v30' fill='none' stroke='black'/></svg>");
+}
+
+.resizerBar:active {
+  background-color: rgba(255, 0, 0, 0.2);
+}

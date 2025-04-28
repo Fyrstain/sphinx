@@ -1,0 +1,33 @@
+.card {
+  width: 100%;
+}
+
+.resizableCard {
+  display: flex;
+  overflow: auto;
+  flex-direction: row;
+}
+
+.cardHeaderNoWrap {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+.textTruncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.buttonHeaderCard {
+  align-items: center;
+  display: flex;
+  gap: 0.8rem;
+}
+
+.buttonIconDisabled {
+  cursor: not-allowed;
+  opacity: 0.3;
+  margin-right: 0.5rem;
+}

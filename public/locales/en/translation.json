@@ -1,0 +1,72 @@
+{
+  "navbar": {
+    "dropdown": {
+      "login": "Login",
+      "logout": "Logout",
+      "admin": "Admin"
+    }
+  },
+  "title": {
+    "libraries": "Libraries",
+    "searchcriteria": "Search criteria",
+    "editstructuremap": "Edit Structure Map",
+    "editquestionnaire": "Edit Questionnaire",
+    "questionnaireresponseform": "Questionnaire Response Form",
+    "error": {
+      "oops": "Oops !",
+      "problem": "An error has occured !"
+    },
+    "inprogress": {
+      "wip": "Work in Progress !",
+      "comingsoon": "Coming soon..."
+    },
+    "testplans": "Test Plan",
+    "testscripts": "Test Script"
+  },
+  "footer": {
+    "items": {
+      "about": "About",
+      "contact": "Contact",
+      "problemtracking": "Problem Tracking"
+    }
+  },
+  "button": {
+    "search": "Search",
+    "reset": "Reset",
+    "validate": "Submit"
+  },
+  "label": {
+    "name": "Name",
+    "draft": "Draft",
+    "active": "Active",
+    "retired": "Retired",
+    "unknown": "Unknown",
+    "status": "Status",
+    "generaldescription": "General description"
+  },
+  "defaultvalue": {
+    "status": "-- Please choose a status --"
+  },
+  "text": {
+    "validationalert": "Please validate to receive a status.",
+    "validationreport": "Validation Report",
+    "loading": "Loading",
+    "questionnaireresponse": "Questionnaire Response",
+    "errorvalidateheader": "Error",
+    "errorvalidatetext": "Unknown error validation",
+    "editortext": "// Write your code here...",
+    "outputtext": "Click on the 'Play' Button to see the result here.",
+    "successsubmitform": "Your form has been successfully submitted ! You will be redirected to the home page.",
+    "errorsubmitform": "An error has occured while submitting your form !"
+  },
+  "tooltip": {
+    "disabled": "Not currently available",
+    "save": "Save your changes",
+    "actualize": "Update your changes",
+    "play": "Make the operation",
+    "reset": "Reset", 
+    "disabledplaystructuremap": "Save or actualize to activate this button",
+    "disabledplayquestionnaire": "Activate by clicking Questionnaire's Play button",
+    "check": "Validate your result"
+  }
+}
