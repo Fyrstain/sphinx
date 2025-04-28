@@ -65,10 +65,6 @@ const SphinxPage: FunctionComponent<{
             // the menu items with their subItems who contains the navigation to the differents pages
             menuItems: [
                 {
-                    title: "STRUCTURE MAPS",
-                    link: (process.env.PUBLIC_URL ?? '') + "/StructureMaps",
-                },
-                {
                     title: "QUESTIONNAIRES",
                     link: (process.env.PUBLIC_URL ?? '') + "/Questionnaires",
                 },

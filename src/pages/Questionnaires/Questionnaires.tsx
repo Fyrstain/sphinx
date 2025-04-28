@@ -74,11 +74,6 @@ const Questionnaires: FunctionComponent = () => {
           },
           inputs: [
             {
-              label: "ID",
-              type: "text",
-              searchParamsName: "_id",
-            },
-            {
               label: i18n.t("label.name"),
               type: "text",
               searchParamsName: "title:contains",
@@ -99,11 +94,6 @@ const Questionnaires: FunctionComponent = () => {
         paginatedTableProperties={{
           columns: [
             {
-              header: "ID",
-              dataField: "id",
-              width: "25%",
-            },
-            {
               header: i18n.t("label.name"),
               dataField: "Name",
               width: "40%",
@@ -120,14 +110,6 @@ const Questionnaires: FunctionComponent = () => {
             },
           ],
           action: [
-            {
-              icon: faPen,
-              onClick: viewInProgress,
-            },
-            {
-              icon: faPlay,
-              onClick: onLaunch,
-            },
             {
               icon: faCheckSquare,
               onClick: onNewResponse,
