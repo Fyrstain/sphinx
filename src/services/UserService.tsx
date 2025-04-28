@@ -82,6 +82,11 @@ const isAuthenticated = (): boolean | undefined => {
 const getUsername = () => keycloak.tokenParsed?.preferred_username;
 
 /**
+ * Returns the email from the Keycloak instance
+ */
+const getEmail = () => keycloak.tokenParsed?.email;
+
+/**
  * Checks if the user has a role
  * 
  * @param roles
@@ -116,6 +121,7 @@ const UserService = {
   getTokenParsed,
   updateToken,
   getUsername,
+  getEmail,
   hasRole,
   getKC,
 };

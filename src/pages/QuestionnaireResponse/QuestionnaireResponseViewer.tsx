@@ -3,9 +3,9 @@ import { FunctionComponent, useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 // Components
 import SphinxPage from "../../components/SphinxPage/SphinxPage";
-import QuestionnaireService from "../../services/QuestionnaireService";
+import QuestionnaireResponseService from "../../services/QuestionnaireResponseService";
 // Resources
-import { Questionnaire, QuestionnaireResponse } from "fhir/r5";
+import { FhirResource, Questionnaire, QuestionnaireResponse } from "fhir/r5";
 // Translation
 import i18n from "i18next";
 // FHIR
@@ -14,7 +14,7 @@ import Client from "fhir-kit-client";
 import { QuestionnaireDisplay, ValueSetLoader } from "@fyrstain/hl7-front-library";
 import UserService from "../../services/UserService";
 
-const QuestionnaireResponseFiller: FunctionComponent = () => {
+const QuestionnaireResponseViewer: FunctionComponent = () => {
     
   /////////////////////////////////////
   //      Constants / ValueSet       //
@@ -24,7 +24,7 @@ const QuestionnaireResponseFiller: FunctionComponent = () => {
   const [loading, setLoading] = useState(false);
 
   // Questionnaire constants
-  const { questionnaireId } = useParams();
+  const { questionnaireResponseId } = useParams();
   const [questionnaireResource, setQuestionnaireResource] = useState(
     {} as Questionnaire
   );
@@ -70,15 +70,13 @@ const QuestionnaireResponseFiller: FunctionComponent = () => {
   async function load() {
     try {
       setLoading(true);
-      const questionnaire = await QuestionnaireService.loadQuestionnaire(
-        questionnaireId as string
-      );
-      setQuestionnaireResource(questionnaire);
-      const questionnaireResponse = await QuestionnaireService.populate(
-        questionnaire,
-        "123"
+      const questionnaireResponse = await QuestionnaireResponseService.loadQuestionnaireResponse(
+        questionnaireResponseId as string
       );
       setQuestionnaireResponseResource(questionnaireResponse);
+      const contained = questionnaireResponse.contained as FhirResource[]
+      const questionnaire = contained[0]  as Questionnaire
+      setQuestionnaireResource(questionnaire);
     } catch (error) {
       onError();
       setLoading(false);
@@ -149,4 +147,4 @@ const QuestionnaireResponseFiller: FunctionComponent = () => {
   );
 };
 
-export default QuestionnaireResponseFiller;
+export default QuestionnaireResponseViewer;

@@ -1,0 +1,19 @@
+{
+  "resourceType": "SearchParameter",
+  "id": "QuestionnaireAuthorIdentifier",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2024-05-14T12:24:33.261+00:00",
+    "source": "#4ZcACKB5Cyq92kdL"
+  },
+  "url": "http://fyrstain.com/fhir/SearchParameter/questionnaire-author-identifier",
+  "name": "questionnaire-author-identifier",
+  "status": "active",
+  "experimental": false,
+  "publisher": "Fyrstain",
+  "description": "This SearchParameter aims to enable the searching of Observation on subject using business references via identifiers.",
+  "code": "author-identifier",
+  "base": ["QuestionnaireResponse"],
+  "type": "token",
+  "expression": "QuestionnaireResponse.author.identifier"
+}

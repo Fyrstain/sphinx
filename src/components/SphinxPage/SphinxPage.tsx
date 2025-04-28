@@ -68,6 +68,10 @@ const SphinxPage: FunctionComponent<{
                     title: "QUESTIONNAIRES",
                     link: (process.env.PUBLIC_URL ?? '') + "/Questionnaires",
                 },
+                {
+                    title: "RESPONSES",
+                    link: (process.env.PUBLIC_URL ?? '') + "/QuestionnairesResponses",
+                },
             ],
             // the user items
             // Admin, Login, Logout are the default items

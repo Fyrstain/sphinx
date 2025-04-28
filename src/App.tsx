@@ -21,6 +21,8 @@ import Questionnaires from "./pages/Questionnaires/Questionnaires";
 import Error from "./pages/Error/Error";
 import InProgress from "./pages/InProgress/InProgress";
 import QuestionnaireResponseFiller from "./pages/QuestionnaireResponse/QuestionnaireResponse";
+import QuestionnairesResponses from "./pages/QuestionnaireResponse/QuestionnairesResponses";
+import QuestionnaireResponseViewer from "./pages/QuestionnaireResponse/QuestionnaireResponseViewer";
 
 require("dayjs/locale/fr");
 
@@ -76,8 +78,16 @@ function App() {
             title = "Questionnaires";
             metaDescription = "";
             break;
+        case "/QuestionnairesResponses":
+            title = "QuestionnairesResponses";
+            metaDescription = "";
+            break;
         case "/Questionnaire/:questionnaireId/new":
             title = "Questionnaire Response";
+            metaDescription = "";
+            break;
+        case "/EditQuestionnaire/:questionnaireResponseId":
+            title = "Questionnaires Responses";
             metaDescription = "";
             break;
     }
@@ -122,6 +132,14 @@ function App() {
         <Route
             path="/Questionnaire/:questionnaireId/new"
             element={<QuestionnaireResponseFiller />}
+        />
+        <Route
+            path="/EditQuestionnaire/:questionnaireResponseId"
+            element={<QuestionnaireResponseViewer />}
+        />
+        <Route
+            path="/QuestionnairesResponses"
+            element={<QuestionnairesResponses />}
         />
         <Route
             path="/Error"
