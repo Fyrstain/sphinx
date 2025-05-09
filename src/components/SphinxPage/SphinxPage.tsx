@@ -53,7 +53,7 @@ const SphinxPage: FunctionComponent<{
             //     }
             // ],
             // Application logo
-            logoLink: (process.env.PUBLIC_URL ?? '') + "/assets/Sphinxlogo.png",
+            logoLink: (process.env.PUBLIC_URL ?? '') + "/assets/SphinxLogo.png",
             alt: "Sphinx Logo",
             // Authentication
             authentication: {
