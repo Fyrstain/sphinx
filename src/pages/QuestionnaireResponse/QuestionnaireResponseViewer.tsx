@@ -71,7 +71,7 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
   }, []);
 
   useEffect(() => {
-    if (questionnaireResponseResource) {
+    if (questionnaireResponseResource && questionnaireResponseResource.id) {
       //Builds the parameter for the call
       const parameters: Parameters = {
         resourceType: "Parameters",
