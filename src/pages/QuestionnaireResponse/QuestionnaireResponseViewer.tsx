@@ -127,7 +127,7 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
           //One-sentence, <140-character summary message for display to the user inside of this card.
           var included = (response as Parameters).parameter?.filter(
             (param) => param.name === "isIncluded"
-          )[0]?.valueString;
+          )[0]?.valueBoolean;
 
           submitToast({
             summary: included ? i18n.t("label.eligible") : i18n.t("label.noteligible"),
