@@ -2,7 +2,6 @@
 import { Questionnaire, Parameters, QuestionnaireResponse, Bundle, BundleEntry } from "fhir/r5";
 // FHIR
 import Client from "fhir-kit-client";
-import { error } from "console";
 
 /////////////////////////////////////
 //             Client              //
@@ -41,12 +40,31 @@ async function loadQuestionnaireResponse(
   }) as Promise<QuestionnaireResponse>;
 }
 
+
+async function extract(questionnaireResponse: QuestionnaireResponse): Promise<Bundle> {
+  return fhirOperationClient.operation({
+      name: "extract",
+      resourceType: 'QuestionnaireResponse',
+      method: "POST",
+      input: {
+          resourceType: "Parameters",
+          parameter: [
+              {
+                  name: "questionnaire-response",
+                  resource: questionnaireResponse
+              }
+          ]
+      }, 
+  });
+}
+
 ///////////////////////////////
 //        exports            //
 ///////////////////////////////
 
 const QuestionnaireResponseService = {
   loadQuestionnaireResponse,
+  extract
 };
 
 export default QuestionnaireResponseService;

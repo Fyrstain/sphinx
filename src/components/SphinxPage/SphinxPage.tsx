@@ -45,13 +45,13 @@ const SphinxPage: FunctionComponent<{
         // Translation
         language: i18n.t,
         navigationBarConfigs: {
-            applicationItems: [
-                {
-                    logoLink: 'https://integ.fyrstain.com/assets/ApplicationsLogos/Pandora.png',
-                    link: 'https://integ.fyrstain.com/Pandora/Home',
-                    alt: 'Pandora logo'
-                }
-            ],
+            // applicationItems: [
+            //     {
+            //         logoLink: 'https://integ.fyrstain.com/assets/ApplicationsLogos/Pandora.png',
+            //         link: 'https://integ.fyrstain.com/Pandora/Home',
+            //         alt: 'Pandora logo'
+            //     }
+            // ],
             // Application logo
             logoLink: (process.env.PUBLIC_URL ?? '') + "/assets/Sphinxlogo.png",
             alt: "Sphinx Logo",

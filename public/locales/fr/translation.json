@@ -21,7 +21,8 @@
       "comingsoon": "Bientôt disponible..."
     },
     "testplans": "Plan de tests",
-    "testscripts": "Script de tests"
+    "testscripts": "Script de tests",
+    "choosepatient": "Choisissez un Patient"
   },
   "footer": {
     "items": {
@@ -42,7 +43,9 @@
     "retired": "Retiré - Retired",
     "unknown": "Inconnu - Unknown",
     "status": "Statut",
-    "generaldescription": "Description générale"
+    "generaldescription": "Description générale",
+    "eligible": "Le patient est éligible à l'étude",
+    "noteligible": "Le patient n'est pas éligible à l'étude"
   },
   "defaultvalue": {
     "status": "-- Merci de choisir un statut --"
@@ -56,7 +59,7 @@
     "errorvalidatetext": "Erreur de validation inconnue",
     "editortext": "// Écrivez votre code ici...",
     "outputtext": "Cliquez sur le bouton 'Play' pour voir le résultat ici.",
-    "successsubmitform": "Votre formulaire a été soumis avec succès ! Vous allez être redirigé vers la page d'accueil.",
+    "successsubmitform": "Votre formulaire a été soumis avec succès ! Vous allez être redirigé vers la page d'édition.",
     "errorsubmitform": "Une erreur est survenue lors de la soumission de votre formulaire !"
   },
   "tooltip": {

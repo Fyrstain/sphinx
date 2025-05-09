@@ -1,7 +1,7 @@
 // React
-import { FunctionComponent } from "react";
+import { FunctionComponent, useEffect } from "react";
 // StructureMap
-import { Title } from "@fyrstain/hl7-front-library";
+import { submitToast, Title, ToastViewer } from "@fyrstain/hl7-front-library";
 // Components
 import SphinxPage from "../../components/SphinxPage/SphinxPage";
 // Styles
@@ -28,7 +28,7 @@ const Home: FunctionComponent = () => {
                         <Title
                             level={1}
                             prefix='Sphinx'
-                            content='Structure Maps & Questionnaires'
+                            content='Questionnaires'
                         />
                     </div>
                 </div>
