@@ -71,7 +71,7 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
   }, []);
 
   useEffect(() => {
-    if (loaded === false) {
+    if (questionnaireResponseResource) {
       //Builds the parameter for the call
       const parameters: Parameters = {
         resourceType: "Parameters",
@@ -138,7 +138,7 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
           onError();
         })
     }
-  }, [loaded]);
+  }, [questionnaireResponseResource]);
 
 
   /**
