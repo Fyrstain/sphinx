@@ -107,7 +107,6 @@ const QuestionnaireResponseFiller: FunctionComponent = () => {
    */
   const handleSubmit = (response: QuestionnaireResponse) => {
     setQuestionnaireResponseResource(response);
-    response.subject = undefined;
     response.author = { identifier: { value: UserService.getEmail() } }
     fhirClient
       .create({ body: response, resourceType: "QuestionnaireResponse" })

@@ -27,7 +27,7 @@ async function loadQuestionnaireResponse(
     resourceType: "QuestionnaireResponse",
     id: questionnaireId ?? "",
   }).then(async response => {
-    if ((response as QuestionnaireResponse).questionnaire) {
+    if ((response as QuestionnaireResponse).questionnaire && !(response as QuestionnaireResponse).contained) {
       await fhirClient.search({
         resourceType: "Questionnaire",
         searchParams: { url: (response as QuestionnaireResponse).questionnaire},
