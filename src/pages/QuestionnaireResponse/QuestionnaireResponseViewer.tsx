@@ -119,7 +119,7 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
       libClient.operation({
           resourceType: "Library",
           name: "$evaluate",
-          id: "PcaInclusionCriteria",
+          id: "FLUTEPcaInclusionCriteria",
           method: "POST",
           input: parameters,
         }).then(response => {
@@ -132,7 +132,7 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
           submitToast({
             summary: included ? i18n.t("label.eligible") : i18n.t("label.noteligible"),
             indicator: "info",
-            source: 'CDS Hook : PcaInclusionCriteria'
+            source: 'CDS Hook : FLUTEPcaInclusionCriteria'
           });
         }).catch(error => {
           onError();
