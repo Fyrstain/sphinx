@@ -16,7 +16,6 @@ import { useNavigate } from "react-router-dom";
 import SphinxPage from "../../components/SphinxPage/SphinxPage";
 
 const Questionnaires: FunctionComponent = () => {
-
   //////////////////////////////
   //        Navigation        //
   //////////////////////////////
@@ -34,7 +33,7 @@ const Questionnaires: FunctionComponent = () => {
     (id: string) => {
       navigate("/Questionnaire/" + id + "/new");
     },
-    [navigate]
+    [navigate],
   );
 
   //////////////////////////////
@@ -92,9 +91,7 @@ const Questionnaires: FunctionComponent = () => {
               dataField: "Status",
               width: "20%",
               formatter: (cell: keyof typeof FhirStatus) => {
-                return (
-                  <StatusTag flavor={FhirStatus[cell]} message={cell} />
-                );
+                return <StatusTag flavor={FhirStatus[cell]} message={cell} />;
               },
             },
           ],

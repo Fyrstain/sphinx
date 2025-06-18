@@ -11,7 +11,7 @@ import reportWebVitals from "./reportWebVitals";
 // styles
 import "./style.css";
 import "./custom.scss";
-import 'bootstrap/dist/js/bootstrap.bundle.min';
+import "bootstrap/dist/js/bootstrap.bundle.min";
 // Axios
 import axios from "axios";
 
@@ -19,19 +19,22 @@ const container = document.getElementById("root");
 const root = createRoot(container!);
 
 const _axios = axios.create({ baseURL: process.env.REACT_APP_REDIRECTURI });
-_axios.interceptors.request.use((config): any => {
-  if (UserService.isAuthenticated()) {
-    const cb = () => {
-      //console.log('axios cb token: ' + UserService.getToken());
-      config.headers.Authorization = `Bearer ${UserService.getToken()}`;
-      return Promise.resolve(config);
-    };
-    //console.log('axios update token before cb Authorization Bearer');
-    return UserService.updateToken(cb);
-  }
-}, (error): any => {
-  return Promise.reject(error);
-});
+_axios.interceptors.request.use(
+  (config): any => {
+    if (UserService.isAuthenticated()) {
+      const cb = () => {
+        //console.log('axios cb token: ' + UserService.getToken());
+        config.headers.Authorization = `Bearer ${UserService.getToken()}`;
+        return Promise.resolve(config);
+      };
+      //console.log('axios update token before cb Authorization Bearer');
+      return UserService.updateToken(cb);
+    }
+  },
+  (error): any => {
+    return Promise.reject(error);
+  },
+);
 
 const renderApp = () =>
   root.render(
@@ -39,7 +42,7 @@ const renderApp = () =>
       <ToastQueueProvider>
         <App />
       </ToastQueueProvider>
-    </BrowserRouter>
+    </BrowserRouter>,
   );
 
 UserService.initKeycloak(renderApp);

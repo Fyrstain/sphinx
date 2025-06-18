@@ -53,7 +53,7 @@ const ToastQueueContext = createContext<ToastQueueContextType | null>(null);
 
 // Wrap children in provider component, allowing them to use the context function
 export function ToastQueueProvider(
-  props: PropsWithChildren<ToastQueueProviderProps>
+  props: PropsWithChildren<ToastQueueProviderProps>,
 ) {
   const [queue, setQueue] = useState<Array<ToastData>>([]);
   const { children, autohideDelay } = {
@@ -62,7 +62,7 @@ export function ToastQueueProvider(
   };
 
   const createToast = useCallback(function (
-    toastData: Omit<ToastData, "id" | "show">
+    toastData: Omit<ToastData, "id" | "show">,
   ) {
     setQueue((previousQueue: ToastData[]) => {
       // Check if there's any toast in the queue with the same body
@@ -82,22 +82,21 @@ export function ToastQueueProvider(
         ];
       }
     });
-  },
-    []);
+  }, []);
 
   // Begins toast close animation
   function closeToast(id: ToastData["id"]) {
     setQueue((currentQueue: ToastData[]) =>
       currentQueue.map((toast) =>
-        toast.id === id ? { ...toast, show: false } : toast
-      )
+        toast.id === id ? { ...toast, show: false } : toast,
+      ),
     );
   }
 
   // Removes toast from queue once close animation complete
   function removeToast(id: ToastData["id"]) {
     setQueue((currentQueue: ToastData[]) =>
-      currentQueue.filter((toast) => toast.id !== id)
+      currentQueue.filter((toast) => toast.id !== id),
     );
   }
 
@@ -141,7 +140,7 @@ ToastQueueProvider.useToastQueue = function () {
   const context = useContext(ToastQueueContext);
   if (context === null)
     throw new Error(
-      "ToastQueueContext cannot be used outside of ToastQueueProvider"
+      "ToastQueueContext cannot be used outside of ToastQueueProvider",
     );
   return context;
 };
