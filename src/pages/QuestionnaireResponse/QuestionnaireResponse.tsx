@@ -71,14 +71,10 @@ const QuestionnaireResponseFiller: FunctionComponent = () => {
   //           Actions          //
   ////////////////////////////////
 
-  useEffect(() => {
-    load();
-  }, []);
-
   /**
    * To load the Questionnaire and use the $populate operation.
    */
-  async function load() {
+  const load = useCallback(async () => {
     try {
       setLoading(true);
       setPatientList(await PatientService.getPatientList());
@@ -92,7 +88,7 @@ const QuestionnaireResponseFiller: FunctionComponent = () => {
     } finally {
       setLoading(false);
     }
-  }
+  }, [questionnaireId, onError]);
 
   /**
    * Returns the list of options for patients.
@@ -112,9 +108,9 @@ const QuestionnaireResponseFiller: FunctionComponent = () => {
       .create({ body: response, resourceType: "QuestionnaireResponse" })
       .then((created) => {
         QuestionnaireResponseService.extract(response)
-        .then(bundle => {
-          extractedClient.batch({body: bundle as FhirResource & { type: "batch"; } })
-        });
+          .then(bundle => {
+            extractedClient.batch({ body: bundle as FhirResource & { type: "batch"; } })
+          });
 
         setAlert({
           message: "text.successsubmitform",
@@ -154,6 +150,17 @@ const QuestionnaireResponseFiller: FunctionComponent = () => {
     }
   }
 
+  ///////////////////////////////
+  //          Lifecycle        //
+  ///////////////////////////////
+
+  /**
+   * Load the Questionnaire and QuestionnaireResponse when the component is mounted.
+   */
+  useEffect(() => {
+    load();
+  }, [load]);
+
   //////////////////////////////
   //          Content         //
   //////////////////////////////
@@ -168,7 +175,7 @@ const QuestionnaireResponseFiller: FunctionComponent = () => {
       <>
 
         <Title level={2} content={i18n.t("title.choosepatient")} />
-        <br/>
+        <br />
         <Form.Select
           value={patient}
           disabled={patient !== ""}
@@ -179,7 +186,7 @@ const QuestionnaireResponseFiller: FunctionComponent = () => {
           </option>
           {getOptions()}
         </Form.Select>
-        <br/>
+        <br />
 
         {patient !== "" &&
           <QuestionnaireDisplay

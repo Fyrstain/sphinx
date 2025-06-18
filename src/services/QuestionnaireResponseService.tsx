@@ -1,5 +1,5 @@
 // Resources
-import { Questionnaire, Parameters, QuestionnaireResponse, Bundle, BundleEntry } from "fhir/r5";
+import { Questionnaire, QuestionnaireResponse, Bundle, BundleEntry } from "fhir/r5";
 // FHIR
 import Client from "fhir-kit-client";
 
@@ -14,6 +14,10 @@ const fhirClient = new Client({
 const fhirOperationClient = new Client({
   baseUrl: process.env.REACT_APP_QUESTIONNAIRE_URL ?? "fhir",
 });
+
+/////////////////////////////////////
+//            Functions            //
+/////////////////////////////////////
 
 /**
  * Load Questionnaire Response from the back to populate the fields.
@@ -30,7 +34,7 @@ async function loadQuestionnaireResponse(
     if ((response as QuestionnaireResponse).questionnaire && !(response as QuestionnaireResponse).contained) {
       await fhirClient.search({
         resourceType: "Questionnaire",
-        searchParams: { url: (response as QuestionnaireResponse).questionnaire},
+        searchParams: { url: (response as QuestionnaireResponse).questionnaire },
       }).then(questionnairelist => {
         const entries = (questionnairelist as Bundle).entry as BundleEntry<Questionnaire>[];
         (response as QuestionnaireResponse).contained?.push(entries[0].resource as Questionnaire);
@@ -40,21 +44,26 @@ async function loadQuestionnaireResponse(
   }) as Promise<QuestionnaireResponse>;
 }
 
-
+/**
+ * Extracts the QuestionnaireResponse into a Bundle using the $extract operation.
+ * 
+ * @param questionnaireResponse The QuestionnaireResponse to extract.
+ *  
+ */
 async function extract(questionnaireResponse: QuestionnaireResponse): Promise<Bundle> {
   return fhirOperationClient.operation({
-      name: "extract",
-      resourceType: 'QuestionnaireResponse',
-      method: "POST",
-      input: {
-          resourceType: "Parameters",
-          parameter: [
-              {
-                  name: "questionnaire-response",
-                  resource: questionnaireResponse
-              }
-          ]
-      }, 
+    name: "extract",
+    resourceType: 'QuestionnaireResponse',
+    method: "POST",
+    input: {
+      resourceType: "Parameters",
+      parameter: [
+        {
+          name: "questionnaire-response",
+          resource: questionnaireResponse
+        }
+      ]
+    },
   });
 }
 

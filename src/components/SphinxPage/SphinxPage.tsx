@@ -3,7 +3,6 @@ import {
     FunctionComponent,
     JSXElementConstructor,
     ReactElement,
-    useCallback,
 } from "react";
 // Components
 import { Page, PageConfiguration } from "@fyrstain/hl7-front-library";
@@ -11,8 +10,6 @@ import { Page, PageConfiguration } from "@fyrstain/hl7-front-library";
 import i18n from "i18next";
 // Authentication
 import UserService from "../../services/UserService";
-// Navigation
-import { useNavigate } from "react-router-dom";
 
 const SphinxPage: FunctionComponent<{
     // The title of the page
@@ -26,12 +23,6 @@ const SphinxPage: FunctionComponent<{
     // If the page needs login or not
     needsLogin: boolean;
 }> = (props) => {
-
-    /////////////////////////////////
-    //        NAVIGATION           //
-    /////////////////////////////////
-
-    const navigate = useNavigate();
 
     /////////////////////////////////
     //           METHODS           //
@@ -57,10 +48,10 @@ const SphinxPage: FunctionComponent<{
             alt: "Sphinx Logo",
             // Authentication
             authentication: {
-              doLogin: UserService.doLogin,
-              doLogout: UserService.doLogout,
-              isAuthenticated: () => UserService.isAuthenticated() || false,
-              getUserName: () => UserService.getUsername(),
+                doLogin: UserService.doLogin,
+                doLogout: UserService.doLogout,
+                isAuthenticated: () => UserService.isAuthenticated() || false,
+                getUserName: () => UserService.getUsername(),
             },
             // the menu items with their subItems who contains the navigation to the differents pages
             menuItems: [

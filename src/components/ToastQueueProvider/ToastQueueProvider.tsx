@@ -19,7 +19,7 @@ import styles from "./ToastQueueProvider.module.css";
 ////////////////////////////////
 
 // Config by default, the position and the time in ms to delete the toast
-const defaultProps: ToastQueueProvider = {
+const defaultProps: ToastQueueProviderProps = {
   autohideDelay: 6000,
 };
 
@@ -27,7 +27,7 @@ const defaultProps: ToastQueueProvider = {
 //         Interfaces         //
 ////////////////////////////////
 
-interface ToastQueueProvider {
+interface ToastQueueProviderProps {
   autohideDelay?: number;
 }
 
@@ -40,12 +40,12 @@ export interface ToastData {
   icon?: any;
 }
 
-interface ToastQueueContext {
+interface ToastQueueContextType {
   createToast: (toastData: Omit<ToastData, "id" | "show">) => void;
 }
 
 // Context provides createToast({ title, body, autohide = true, bg = undefined }) function
-const ToastQueueContext = createContext<ToastQueueContext | null>(null);
+const ToastQueueContext = createContext<ToastQueueContextType | null>(null);
 
 ////////////////////////////////
 //           Actions          //
@@ -53,7 +53,7 @@ const ToastQueueContext = createContext<ToastQueueContext | null>(null);
 
 // Wrap children in provider component, allowing them to use the context function
 export function ToastQueueProvider(
-  props: PropsWithChildren<ToastQueueProvider>
+  props: PropsWithChildren<ToastQueueProviderProps>
 ) {
   const [queue, setQueue] = useState<Array<ToastData>>([]);
   const { children, autohideDelay } = {
@@ -83,7 +83,7 @@ export function ToastQueueProvider(
       }
     });
   },
-  []);
+    []);
 
   // Begins toast close animation
   function closeToast(id: ToastData["id"]) {

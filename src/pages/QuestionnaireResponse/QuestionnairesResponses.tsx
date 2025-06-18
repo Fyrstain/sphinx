@@ -1,5 +1,5 @@
 // Font awesome
-import { faPlay, faPen, faCheckSquare } from "@fortawesome/free-solid-svg-icons";
+import { faCheckSquare } from "@fortawesome/free-solid-svg-icons";
 // Fhir front library
 import {
   FhirStatus,
@@ -17,7 +17,7 @@ import SphinxPage from "../../components/SphinxPage/SphinxPage";
 import UserService from "../../services/UserService";
 
 const QuestionnairesResponses: FunctionComponent = () => {
-    
+
   //////////////////////////////
   //        Navigation        //
   //////////////////////////////
@@ -26,12 +26,10 @@ const QuestionnairesResponses: FunctionComponent = () => {
 
   const onDetails = useCallback(
     (id: string) => {
-    navigate("/EditQuestionnaire/" + id);
+      navigate("/EditQuestionnaire/" + id);
     },
     [navigate]
   );
-
-
 
   //////////////////////////////
   //           Error          //

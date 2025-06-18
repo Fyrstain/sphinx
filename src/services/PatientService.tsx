@@ -1,5 +1,5 @@
 // Resources
-import { Patient, Parameters, Bundle } from "fhir/r5";
+import { Bundle, Patient } from "fhir/r5";
 // FHIR
 import Client from "fhir-kit-client";
 
@@ -15,6 +15,10 @@ export interface ResourceSelectItem {
   value: string,
   display: string
 }
+
+/////////////////////////////////////
+//            Functions            //
+/////////////////////////////////////
 
 /**
  * Load the list of Patient to display in a select type component.
@@ -55,7 +59,7 @@ async function getPatientList(): Promise<ResourceSelectItem[]> {
 
         selectItems.push({ value: patient.id ?? '', display: display });
       })
-      return selectItems;
+    return selectItems;
   });
 }
 

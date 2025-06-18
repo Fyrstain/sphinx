@@ -1,7 +1,7 @@
 // React
-import { FunctionComponent, useEffect } from "react";
+import { FunctionComponent } from "react";
 // StructureMap
-import { submitToast, Title, ToastViewer } from "@fyrstain/hl7-front-library";
+import { Title } from "@fyrstain/hl7-front-library";
 // Components
 import SphinxPage from "../../components/SphinxPage/SphinxPage";
 // Styles
