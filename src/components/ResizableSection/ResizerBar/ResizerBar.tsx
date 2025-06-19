@@ -27,6 +27,7 @@ const ResizableBar: FunctionComponent<ResizerBarProps> = ({
   setLeftFlex,
   setRightFlex,
 }) => {
+    
   ////////////////////////////////
   //           Actions          //
   ////////////////////////////////
@@ -45,7 +46,7 @@ const ResizableBar: FunctionComponent<ResizerBarProps> = ({
       leftRef: MutableRefObject<HTMLDivElement | null>,
       rightRef: MutableRefObject<HTMLDivElement | null>,
       setLeftFlex: (newSize: { flex: number }) => void,
-      setRightFlex: (newSize: { flex: number }) => void,
+      setRightFlex: (newSize: { flex: number }) => void
     ) =>
     (mouseDownEvent: React.MouseEvent) => {
       // To stop the selection during the resizing
@@ -111,7 +112,8 @@ const ResizableBar: FunctionComponent<ResizerBarProps> = ({
     <div
       className={styles.resizerBar}
       onMouseDown={handleResize(leftRef, rightRef, setLeftFlex, setRightFlex)}
-    ></div>
+    >  
+    </div>
   );
 };
 

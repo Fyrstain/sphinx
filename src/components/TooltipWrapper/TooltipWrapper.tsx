@@ -21,6 +21,7 @@ const TooltipWrapper: FunctionComponent<TooltipWrapperProps> = ({
   text,
   children,
 }) => {
+    
   //////////////////////////////
   //          Content         //
   //////////////////////////////

@@ -3,9 +3,7 @@ import { FunctionComponent, MutableRefObject } from "react";
 // Styles
 import styles from "./ResizableContainer.module.css";
 // Components
-import ResizableCard, {
-  ResizableCardProps,
-} from "./ResizableCard/ResizableCard";
+import ResizableCard, {ResizableCardProps} from "./ResizableCard/ResizableCard";
 
 ////////////////////////////////
 //           Props            //
@@ -22,14 +20,21 @@ const ResizableContainer: FunctionComponent<ResizableContainerProps> = ({
   containerWidthRef,
   cardConfig,
 }) => {
+    
   //////////////////////////////
   //          Content         //
   //////////////////////////////
 
   return (
-    <div className={styles.resizableContainer} ref={containerWidthRef}>
+    <div 
+        className={styles.resizableContainer} 
+        ref={containerWidthRef}
+    >
       {cardConfig?.map((config, index) => (
-        <ResizableCard key={index} {...config} />
+        <ResizableCard 
+            key={index} 
+            {...config}
+        />
       ))}
     </div>
   );

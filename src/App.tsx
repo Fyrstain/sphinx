@@ -35,7 +35,7 @@ i18n
     supportedLngs: ["fr", "en"],
     backend: {
       loadPath: `${process.env.PUBLIC_URL}/locales/{{lng}}/{{ns}}.json`,
-    },
+    }
   });
 
 dayjs.extend(relativeTime);
@@ -59,37 +59,37 @@ function App() {
     let metaDescription = "";
 
     switch (pathname) {
-      case "/":
-      case "/Sphinx":
-      case "/Home":
-      case "/Sphinx/Home":
-        title = "Home page";
-        metaDescription = "";
-        break;
-      case "/Error":
-        title = "Oops !";
-        metaDescription = "";
-        break;
-      case "/InProgress":
-        title = "Coming Soon";
-        metaDescription = "";
-        break;
-      case "/Questionnaires":
-        title = "Questionnaires";
-        metaDescription = "";
-        break;
-      case "/QuestionnairesResponses":
-        title = "QuestionnairesResponses";
-        metaDescription = "";
-        break;
-      case "/Questionnaire/:questionnaireId/new":
-        title = "Questionnaire Response";
-        metaDescription = "";
-        break;
-      case "/EditQuestionnaire/:questionnaireResponseId":
-        title = "Questionnaires Responses";
-        metaDescription = "";
-        break;
+        case "/":
+        case "/Sphinx":
+        case "/Home":
+        case "/Sphinx/Home":
+            title = "Home page";
+            metaDescription = "";
+            break;
+        case "/Error":
+            title = "Oops !";
+            metaDescription = "";
+            break;
+        case "/InProgress":
+            title = "Coming Soon";
+            metaDescription = "";
+            break;
+        case "/Questionnaires":
+            title = "Questionnaires";
+            metaDescription = "";
+            break;
+        case "/QuestionnairesResponses":
+            title = "QuestionnairesResponses";
+            metaDescription = "";
+            break;
+        case "/Questionnaire/:questionnaireId/new":
+            title = "Questionnaire Response";
+            metaDescription = "";
+            break;
+        case "/EditQuestionnaire/:questionnaireResponseId":
+            title = "Questionnaires Responses";
+            metaDescription = "";
+            break;
     }
 
     if (title) {
@@ -98,7 +98,7 @@ function App() {
 
     if (metaDescription) {
       const metaDescriptionTag: HTMLMetaElement | null = document.querySelector(
-        'head > meta[name="description"]',
+        'head > meta[name="description"]'
       );
       if (metaDescriptionTag) {
         metaDescriptionTag.content = metaDescription;
@@ -108,26 +108,47 @@ function App() {
 
   return (
     <Routes>
-      <Route index element={<Home />} />
-      <Route path="/" element={<Home />} />
-      <Route path="/Home" element={<Home />} />
-      <Route path="/Sphinx" element={<Home />} />
-      <Route path="/Sphinx/Home" element={<Home />} />
-      <Route path="/Questionnaires" element={<Questionnaires />} />
-      <Route
-        path="/Questionnaire/:questionnaireId/new"
-        element={<QuestionnaireResponseFiller />}
-      />
-      <Route
-        path="/EditQuestionnaire/:questionnaireResponseId"
-        element={<QuestionnaireResponseViewer />}
-      />
-      <Route
-        path="/QuestionnairesResponses"
-        element={<QuestionnairesResponses />}
-      />
-      <Route path="/Error" element={<Error />} />
-      <Route path="/InProgress" element={<InProgress />} />
+        <Route index element={<Home />} />
+        <Route
+            path="/"
+            element={<Home />}
+        />
+        <Route
+            path="/Home"
+            element={<Home />}
+        />
+        <Route
+            path="/Sphinx"
+            element={<Home />}
+        />
+        <Route
+            path="/Sphinx/Home"
+            element={<Home />}
+        />
+        <Route
+            path="/Questionnaires"
+            element={<Questionnaires />}
+        />
+        <Route
+            path="/Questionnaire/:questionnaireId/new"
+            element={<QuestionnaireResponseFiller />}
+        />
+        <Route
+            path="/EditQuestionnaire/:questionnaireResponseId"
+            element={<QuestionnaireResponseViewer />}
+        />
+        <Route
+            path="/QuestionnairesResponses"
+            element={<QuestionnairesResponses />}
+        />
+        <Route
+            path="/Error"
+            element={<Error />}
+        />
+        <Route
+            path="/InProgress"
+            element={<InProgress />}
+        />
     </Routes>
   );
 }

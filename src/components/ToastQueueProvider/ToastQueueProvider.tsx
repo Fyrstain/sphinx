@@ -19,7 +19,7 @@ import styles from "./ToastQueueProvider.module.css";
 ////////////////////////////////
 
 // Config by default, the position and the time in ms to delete the toast
-const defaultProps: ToastQueueProviderProps = {
+const defaultProps: ToastQueueProvider = {
   autohideDelay: 6000,
 };
 
@@ -27,7 +27,7 @@ const defaultProps: ToastQueueProviderProps = {
 //         Interfaces         //
 ////////////////////////////////
 
-interface ToastQueueProviderProps {
+interface ToastQueueProvider {
   autohideDelay?: number;
 }
 
@@ -40,12 +40,12 @@ export interface ToastData {
   icon?: any;
 }
 
-interface ToastQueueContextType {
+interface ToastQueueContext {
   createToast: (toastData: Omit<ToastData, "id" | "show">) => void;
 }
 
 // Context provides createToast({ title, body, autohide = true, bg = undefined }) function
-const ToastQueueContext = createContext<ToastQueueContextType | null>(null);
+const ToastQueueContext = createContext<ToastQueueContext | null>(null);
 
 ////////////////////////////////
 //           Actions          //
@@ -53,7 +53,7 @@ const ToastQueueContext = createContext<ToastQueueContextType | null>(null);
 
 // Wrap children in provider component, allowing them to use the context function
 export function ToastQueueProvider(
-  props: PropsWithChildren<ToastQueueProviderProps>,
+  props: PropsWithChildren<ToastQueueProvider>
 ) {
   const [queue, setQueue] = useState<Array<ToastData>>([]);
   const { children, autohideDelay } = {
@@ -62,7 +62,7 @@ export function ToastQueueProvider(
   };
 
   const createToast = useCallback(function (
-    toastData: Omit<ToastData, "id" | "show">,
+    toastData: Omit<ToastData, "id" | "show">
   ) {
     setQueue((previousQueue: ToastData[]) => {
       // Check if there's any toast in the queue with the same body
@@ -82,21 +82,22 @@ export function ToastQueueProvider(
         ];
       }
     });
-  }, []);
+  },
+  []);
 
   // Begins toast close animation
   function closeToast(id: ToastData["id"]) {
     setQueue((currentQueue: ToastData[]) =>
       currentQueue.map((toast) =>
-        toast.id === id ? { ...toast, show: false } : toast,
-      ),
+        toast.id === id ? { ...toast, show: false } : toast
+      )
     );
   }
 
   // Removes toast from queue once close animation complete
   function removeToast(id: ToastData["id"]) {
     setQueue((currentQueue: ToastData[]) =>
-      currentQueue.filter((toast) => toast.id !== id),
+      currentQueue.filter((toast) => toast.id !== id)
     );
   }
 
@@ -140,7 +141,7 @@ ToastQueueProvider.useToastQueue = function () {
   const context = useContext(ToastQueueContext);
   if (context === null)
     throw new Error(
-      "ToastQueueContext cannot be used outside of ToastQueueProvider",
+      "ToastQueueContext cannot be used outside of ToastQueueProvider"
     );
   return context;
 };
