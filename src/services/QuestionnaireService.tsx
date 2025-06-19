@@ -21,7 +21,7 @@ const fhirOperationClient = new Client({
  * @returns the promise of a Questionnaire.
  */
 async function loadQuestionnaire(
-  questionnaireId: string
+  questionnaireId: string,
 ): Promise<Questionnaire> {
   return fhirClient.read({
     resourceType: "Questionnaire",
@@ -35,7 +35,7 @@ async function loadQuestionnaire(
  * @returns the promise of a Questionnaire.
  */
 async function createQuestionnaire(
-  questionnaire: Questionnaire
+  questionnaire: Questionnaire,
 ): Promise<Questionnaire> {
   return fhirClient.create({
     resourceType: "Questionnaire",
@@ -48,7 +48,7 @@ async function createQuestionnaire(
  */
 async function populate(
   questionnaire: Questionnaire,
-  subjectID: string
+  subjectID: string,
 ): Promise<QuestionnaireResponse> {
   // Use the parameter questionnaire
   let parameter: Parameters = {

@@ -15,7 +15,7 @@ import i18n from "i18next";
 
 export interface LoadingButtonProps {
   // The function to be triggered when the button is clicked
-  onClick?: any
+  onClick?: any;
   // The boolean to show the spinner when the button is loading
   isLoading?: boolean;
   // The icon of the button
@@ -39,10 +39,9 @@ const LoadingButton: FunctionComponent<LoadingButtonProps> = ({
   isDisabled,
   disabledTooltipText,
   enabledTooltipText,
-  operationName, 
-  isOutput, 
+  operationName,
+  isOutput,
 }) => {
-    
   /////////////////////////////////////
   //      Constants / ValueSet       //
   /////////////////////////////////////
@@ -63,7 +62,9 @@ const LoadingButton: FunctionComponent<LoadingButtonProps> = ({
         <Spinner
           animation="border"
           role="status"
-          className={isOutput ? "spinnerPlayLoading" : "spinnerPlayLoadingOutput"}
+          className={
+            isOutput ? "spinnerPlayLoading" : "spinnerPlayLoadingOutput"
+          }
         >
           <span className="visually-hidden">{i18n.t("text.loading")}</span>
         </Spinner>
