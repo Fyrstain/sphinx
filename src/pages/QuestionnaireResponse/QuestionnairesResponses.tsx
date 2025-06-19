@@ -1,5 +1,5 @@
 // Font awesome
-import { faCheckSquare } from "@fortawesome/free-solid-svg-icons";
+import { faPlay, faPen, faCheckSquare } from "@fortawesome/free-solid-svg-icons";
 // Fhir front library
 import {
   FhirStatus,
@@ -17,6 +17,7 @@ import SphinxPage from "../../components/SphinxPage/SphinxPage";
 import UserService from "../../services/UserService";
 
 const QuestionnairesResponses: FunctionComponent = () => {
+    
   //////////////////////////////
   //        Navigation        //
   //////////////////////////////
@@ -25,10 +26,12 @@ const QuestionnairesResponses: FunctionComponent = () => {
 
   const onDetails = useCallback(
     (id: string) => {
-      navigate("/EditQuestionnaire/" + id);
+    navigate("/EditQuestionnaire/" + id);
     },
-    [navigate],
+    [navigate]
   );
+
+
 
   //////////////////////////////
   //           Error          //
@@ -52,7 +55,7 @@ const QuestionnairesResponses: FunctionComponent = () => {
           language: i18n.t,
           fixedParameters: {
             _sort: "-_lastUpdated",
-            "author-identifier": UserService.getEmail(),
+            "author-identifier": UserService.getEmail()
           },
           inputs: [
             {
@@ -85,7 +88,9 @@ const QuestionnairesResponses: FunctionComponent = () => {
               dataField: "Status",
               width: "20%",
               formatter: (cell: keyof typeof FhirStatus) => {
-                return <StatusTag flavor={FhirStatus[cell]} message={cell} />;
+                return (
+                  <StatusTag flavor={FhirStatus[cell]} message={cell} />
+                );
               },
             },
           ],
@@ -96,10 +101,7 @@ const QuestionnairesResponses: FunctionComponent = () => {
             },
           ],
           mapResourceToData: (resource: any) => {
-            const name =
-              (resource.contained && resource.contained[0].title
-                ? resource.contained[0].title
-                : resource.questionnaire) ?? "";
+            const name = ((resource.contained && resource.contained[0].title) ? resource.contained[0].title : resource.questionnaire) ?? "";
             return {
               id: resource.id,
               Name: name,
