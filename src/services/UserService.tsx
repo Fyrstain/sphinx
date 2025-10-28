@@ -29,7 +29,7 @@ const initKeycloak = (onAuthenticatedCallback: any) => {
     .init({
       onLoad: process.env.REACT_APP_KEYCLOAK_ONLOAD as KeycloakOnLoad,
       silentCheckSsoRedirectUri:
-        window.location.origin + "/silent-check-sso.html",
+        window.location.origin + (process.env.PUBLIC_URL || "") + "/silent-check-sso.html",
       pkceMethod: process.env
         .REACT_APP_KEYCLOAK_PKCE_METHOD as KeycloakPkceMethod,
       flow: process.env.REACT_APP_KEYCLOAK_FLOW as KeycloakFlow,
