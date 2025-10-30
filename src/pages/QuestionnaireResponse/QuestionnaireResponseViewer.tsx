@@ -193,6 +193,26 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
             },
           },
           {
+            name: "dataEndpoint",
+            resource: {
+              resourceType: "Endpoint",
+              status: "active",
+              connectionType: [
+                {
+                  coding: [
+                    {
+                      system:
+                        "http://terminology.hl7.org/CodeSystem/endpoint-connection-type",
+                      code: "hl7-fhir-rest",
+                    },
+                  ],
+                },
+              ],
+              address: process.env.REACT_APP_FHIR_URL ?? "/fhir",
+              header: ["Content-Type: application/json"],
+            },
+          },
+          {
             name: "subject",
             valueString:
               questionnaireResponseResource.subject?.reference
