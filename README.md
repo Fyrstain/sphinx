@@ -2,6 +2,9 @@
 
 Sphinx is a software that display a list a questionnaires and allow users to fill them up
 
+License : Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)  
+Link to more information to the license : [License](./licence.md)
+
 ## Prerequisites
 
 Note: Please ensure you have installed <code><a href="https://nodejs.org/en/download/">node js</a></code>
