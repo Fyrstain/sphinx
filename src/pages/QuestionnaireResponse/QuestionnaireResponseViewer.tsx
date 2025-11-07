@@ -10,7 +10,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Toast, ToastContainer } from "react-bootstrap";
 // Components
 import SphinxPage from "../../components/SphinxPage/SphinxPage";
-import CDSCards from "../../components/CDSCards/CDSCards";
 // Services
 import QuestionnaireResponseService from "../../services/QuestionnaireResponseService";
 import CDSHooksService, {
@@ -31,9 +30,8 @@ import Client from "fhir-kit-client";
 // HL7-Front-Library
 import {
   QuestionnaireDisplay,
-  submitToast,
-  ToastViewer,
   ValueSetLoader,
+  CDSCards
 } from "@fyrstain/hl7-front-library";
 
 const QuestionnaireResponseViewer: FunctionComponent = () => {

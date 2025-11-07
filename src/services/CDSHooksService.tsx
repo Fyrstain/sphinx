@@ -1,4 +1,4 @@
-import { CDSCardProps } from "../components/CDSCards/CDSCards";
+import { CDSCardProps } from "@fyrstain/hl7-front-library";
 
 export type CDSCard = CDSCardProps["card"];
 
