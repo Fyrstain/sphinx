@@ -13,8 +13,7 @@ import SphinxPage from "../../components/SphinxPage/SphinxPage";
 // Services
 import QuestionnaireResponseService from "../../services/QuestionnaireResponseService";
 import CDSHooksService, {
-  CDSHooksContext,
-  CDSCard,
+  CDSHooksContext
 } from "../../services/CDSHooksService";
 import UserService from "../../services/UserService";
 // Resources
@@ -31,8 +30,11 @@ import Client from "fhir-kit-client";
 import {
   QuestionnaireDisplay,
   ValueSetLoader,
-  CDSCards
+  CDSCards,
+  CDSCardData
 } from "@fyrstain/hl7-front-library";
+// CSS
+import "./QuestionnaireResponseViewer.css";
 
 const QuestionnaireResponseViewer: FunctionComponent = () => {
   /////////////////////////////////////
@@ -55,7 +57,7 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
     message: string;
     isError: boolean;
   } | null>(null);
-  const [cards, setCards] = useState<CDSCard[]>([]);
+  const [cards, setCards] = useState<CDSCardData[]>([]);
   const [showCDSToast, setShowCDSToast] = useState(false);
 
   /////////////////////////////////////
@@ -191,36 +193,25 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
     >
       <>
         <ToastContainer
-          className="position-fixed"
+          className="position-fixed qrv-toast-container"
           position="top-end"
-          style={{
-            zIndex: 1060,
-            transform: 'translate(-0.75rem, 5rem)'
-          }}
         >
           <Toast
             onClose={() => setShowCDSToast(false)}
             show={showCDSToast}
             autohide
-            delay={100000}
-            style={{
-              minWidth: "28rem",
-              maxWidth: "32rem",
-              backgroundColor: "transparent",
-              border: "none",
-              boxShadow: "none",
-            }}
+            delay={10000}
+            className="qrv-toast"
           >
             <Toast.Body className="p-0 position-relative">
               <button
                 type="button"
                 onClick={() => setShowCDSToast(false)}
                 aria-label="Close"
-                className="btn-close position-absolute top-0 end-0 m-3"
-                style={{ zIndex: 2 }}
+                className="btn-close position-absolute top-0 end-0 m-3 qrv-toast-close"
               ></button>
 
-              <CDSCards cards={cards} />
+              <CDSCards cards={cards} language={i18n.t} />
             </Toast.Body>
           </Toast>
         </ToastContainer>
@@ -231,12 +222,11 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
           questionnaireResponse={questionnaireResponseResource}
           valueSetLoader={new ValueSetLoader(fhirClient)}
           onSubmit={handleSubmit}
-          onError={() => {}}
+          onError={() => { }}
         />
         {alert && (
           <div
-            className={`mt-3 alert ${
-              alert.isError ? "alert-danger" : "alert-success"
+            className={`mt-3 alert ${alert.isError ? "alert-danger" : "alert-success"
               }`}
             role="alert"
           >

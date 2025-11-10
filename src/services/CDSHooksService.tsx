@@ -1,20 +1,40 @@
-import { CDSCardProps } from "@fyrstain/hl7-front-library";
+import { CDSCardData } from "@fyrstain/hl7-front-library";
 
-export type CDSCard = CDSCardProps["card"];
-
+/**
+ * Context required by the CDS Hooks to evaluate study eligibility.
+ */
 export interface CDSHooksContext {
+  /** ID of the patient to evaluate */
   patientId: string;
+
+  /** Clinical study ID, e.g., "FLUTE" */
   studyId: string;
+
+  /** ID of the CQL library to use for the calculation */
   libraryId: string;
+
+  /** CQL expression to evaluate for inclusion */
   inclusionExpression: string;
+
+  /** Optional FHIR server URL containing the patient's data */
   contentServer?: string;
+
+  /** Optional terminology server URL (ValueSet, CodeSystem) */
   terminologyServer?: string;
+
+  /** Optional CQL/Expression Engine server URL */
   CQLEngineServer?: string;
 }
 
+/**
+ * Calls the CDS Service "Research Eligibility Check" to retrieve Clinical Decision Support cards.
+ * @param context - Context including patientId, studyId, libraryId, inclusionExpression, and optional servers
+ * @returns A promise resolved with a list of CDS cards (CDSCardData[])
+ * @throws Error if the CDS service response is not OK
+ */
 async function callResearchEligibilityCheck(
   context: CDSHooksContext,
-): Promise<CDSCard[]> {
+): Promise<CDSCardData[]> {
   const payload = {
     hook: "patient-view",
     hookInstance: `${Date.now()}`,
@@ -39,6 +59,9 @@ async function callResearchEligibilityCheck(
   return data.cards || [];
 }
 
+/**
+ * CDS Hooks service containing available CDS service calls
+ */
 const CDSHooksService = {
   callResearchEligibilityCheck,
 };
