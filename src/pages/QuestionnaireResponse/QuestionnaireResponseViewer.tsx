@@ -1,55 +1,76 @@
 // React
-import { FunctionComponent, useCallback, useEffect, useState } from "react";
+import {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { Toast, ToastContainer } from "react-bootstrap";
 // Components
 import SphinxPage from "../../components/SphinxPage/SphinxPage";
+// Services
 import QuestionnaireResponseService from "../../services/QuestionnaireResponseService";
+import CDSHooksService, {
+  CDSHooksContext
+} from "../../services/CDSHooksService";
+import UserService from "../../services/UserService";
 // Resources
-import { FhirResource, Questionnaire, Parameters, QuestionnaireResponse } from "fhir/r5";
+import {
+  FhirResource,
+  Questionnaire,
+  QuestionnaireResponse,
+} from "fhir/r5";
 // Translation
 import i18n from "i18next";
 // FHIR
 import Client from "fhir-kit-client";
 // HL7-Front-Library
-import { QuestionnaireDisplay, submitToast, ToastViewer, ValueSetLoader } from "@fyrstain/hl7-front-library";
-import UserService from "../../services/UserService";
+import {
+  QuestionnaireDisplay,
+  ValueSetLoader,
+  CDSCards,
+  CDSCardData
+} from "@fyrstain/hl7-front-library";
+// CSS
+import "./QuestionnaireResponseViewer.css";
 
 const QuestionnaireResponseViewer: FunctionComponent = () => {
-
   /////////////////////////////////////
   //      Constants / ValueSet       //
   /////////////////////////////////////
 
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [loaded, setLoaded] = useState(false);
-
 
   // Questionnaire constants
   const { questionnaireResponseId } = useParams();
   const [questionnaireResource, setQuestionnaireResource] = useState(
-    {} as Questionnaire
+    {} as Questionnaire,
   );
   const [questionnaireResponseResource, setQuestionnaireResponseResource] =
     useState({} as QuestionnaireResponse);
 
-  // An alert to display success or error message
+  // Alerts and cards
   const [alert, setAlert] = useState<{
     message: string;
     isError: boolean;
   } | null>(null);
+  const [cards, setCards] = useState<CDSCardData[]>([]);
+  const [showCDSToast, setShowCDSToast] = useState(false);
 
   /////////////////////////////////////
   //             Client              //
   /////////////////////////////////////
 
-  const fhirClient = new Client({
-    baseUrl: process.env.REACT_APP_FHIR_URL ?? "fhir",
-  });
-
-  const libClient = new Client({
-    baseUrl: process.env.REACT_APP_CQL_URL ?? "fhir",
-  });
+  const fhirClient = useMemo(
+    () =>
+      new Client({
+        baseUrl: process.env.REACT_APP_FHIR_URL ?? "fhir",
+      }),
+    [],
+  );
 
   //////////////////////////////
   //           Error          //
@@ -66,102 +87,27 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
   //           Actions          //
   ////////////////////////////////
 
-  useEffect(() => {
-    load();
-  }, []);
-
-  useEffect(() => {
-    if (questionnaireResponseResource && questionnaireResponseResource.id) {
-      //Builds the parameter for the call
-      const parameters: Parameters = {
-        resourceType: "Parameters",
-        parameter: [
-          {
-            name: "terminologyEndpoint",
-            resource: {
-              resourceType: "Endpoint",
-              status: "active",
-              connectionType: [{
-                coding: [{
-                  system:
-                  "http://terminology.hl7.org/CodeSystem/endpoint-connection-type",
-                code: "hl7-fhir-rest",
-                }]
-              }],
-              address: process.env.REACT_APP_FHIR_URL ?? "/fhir",
-              header: ["Content-Type: application/json"],
-            },
-          },
-          {
-            name: "contentEndpoint",
-            resource: {
-              resourceType: "Endpoint",
-              status: "active",
-              connectionType: [{
-                coding: [{
-                  system:
-                  "http://terminology.hl7.org/CodeSystem/endpoint-connection-type",
-                code: "hl7-fhir-rest",
-                }]
-              }],
-              address: process.env.REACT_APP_FHIR_URL ?? "/fhir",
-              header: ["Content-Type: application/json"],
-            },
-          },
-          {
-            name: "subject",
-            valueString: questionnaireResponseResource.subject?.reference?.split('/').at(1) ?? '',
-          }
-        ],
-      };
-
-      //Call the library evaluation
-      libClient.operation({
-          resourceType: "Library",
-          name: "$evaluate",
-          id: "FLUTEPcaInclusionCriteria",
-          method: "POST",
-          input: parameters,
-        }).then(response => {
-
-          //One-sentence, <140-character summary message for display to the user inside of this card.
-          var included = (response as Parameters).parameter?.filter(
-            (param) => param.name === "isIncluded"
-          )[0]?.valueBoolean;
-
-          submitToast({
-            summary: included ? i18n.t("label.eligible") : i18n.t("label.noteligible"),
-            indicator: "info",
-            source: 'CDS Hook : FLUTEPcaInclusionCriteria'
-          });
-        }).catch(error => {
-          onError();
-        })
-    }
-  }, [questionnaireResponseResource]);
-
-
   /**
    * To load the Questionnaire and use the $populate operation.
    */
-  async function load() {
+  const load = useCallback(async () => {
     try {
       setLoading(true);
-      const questionnaireResponse = await QuestionnaireResponseService.loadQuestionnaireResponse(
-        questionnaireResponseId as string
-      );
+      const questionnaireResponse =
+        await QuestionnaireResponseService.loadQuestionnaireResponse(
+          questionnaireResponseId as string,
+        );
       setQuestionnaireResponseResource(questionnaireResponse);
-      const contained = questionnaireResponse.contained as FhirResource[]
-      const questionnaire = contained[0] as Questionnaire
+      const contained = questionnaireResponse.contained as FhirResource[];
+      const questionnaire = contained[0] as Questionnaire;
       setQuestionnaireResource(questionnaire);
     } catch (error) {
       onError();
       setLoading(false);
     } finally {
       setLoading(false);
-      setLoaded(true)
     }
-  }
+  }, [questionnaireResponseId, onError]);
 
   /**
    * To handle the submit of the QuestionnaireResponse.
@@ -170,7 +116,7 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
   const handleSubmit = (response: QuestionnaireResponse) => {
     setQuestionnaireResponseResource(response);
     response.subject = undefined;
-    response.author = { identifier: { value: UserService.getEmail() } }
+    response.author = { identifier: { value: UserService.getEmail() } };
     fhirClient
       .create({ body: response, resourceType: "QuestionnaireResponse" })
       .then(() => {
@@ -190,6 +136,50 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
       });
   };
 
+  ///////////////////////////////
+  //          Life cycle       //
+  ///////////////////////////////
+
+  /**
+   * Load the Questionnaire and QuestionnaireResponse when the component is mounted.
+   */
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  /**
+   * Load the Questionnaire and QuestionnaireResponse when the questionnaireResponseId changes.
+   */
+  useEffect(() => {
+    const fetchCDSCards = async () => {
+      if (!questionnaireResponseResource?.id) return;
+
+      try {
+        const context: CDSHooksContext = {
+          patientId:
+            questionnaireResponseResource.subject?.reference?.split("/")?.at(1) ??
+            "",
+          studyId: "FLUTE",
+          libraryId: "FLUTEPcaInclusionCriteria",
+          inclusionExpression: "isIncluded",
+          contentServer: process.env.REACT_APP_FHIR_URL,
+          terminologyServer: process.env.REACT_APP_TERMINOLOGY_URL,
+          CQLEngineServer: process.env.REACT_APP_CQL_URL,
+        };
+
+        const result = await CDSHooksService.callResearchEligibilityCheck(context);
+        setCards(result);
+        setShowCDSToast(true);
+        window.setTimeout(() => setShowCDSToast(false), 20000);
+      } catch (error) {
+        console.error("CDS Hooks error:", error);
+        onError();
+      }
+    };
+
+    fetchCDSCards();
+  }, [questionnaireResponseResource, onError]);
+
   //////////////////////////////
   //          Content         //
   //////////////////////////////
@@ -202,7 +192,30 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
       needsLogin={false}
     >
       <>
-        <ToastViewer />
+        <ToastContainer
+          className="position-fixed qrv-toast-container"
+          position="top-end"
+        >
+          <Toast
+            onClose={() => setShowCDSToast(false)}
+            show={showCDSToast}
+            autohide
+            delay={10000}
+            className="qrv-toast"
+          >
+            <Toast.Body className="p-0 position-relative">
+              <button
+                type="button"
+                onClick={() => setShowCDSToast(false)}
+                aria-label="Close"
+                className="btn-close position-absolute top-0 end-0 m-3 qrv-toast-close"
+              ></button>
+
+              <CDSCards cards={cards} language={i18n.t} />
+            </Toast.Body>
+          </Toast>
+        </ToastContainer>
+
         <QuestionnaireDisplay
           language={i18n.t}
           questionnaire={questionnaireResource}

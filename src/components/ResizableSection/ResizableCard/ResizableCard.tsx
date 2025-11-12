@@ -3,7 +3,9 @@ import { FunctionComponent, MutableRefObject } from "react";
 // Fhir Front Library
 import { Title } from "@fyrstain/hl7-front-library";
 // Components
-import LoadingButton, {LoadingButtonProps} from "../../LoadingButton/LoadingButton";
+import LoadingButton, {
+  LoadingButtonProps,
+} from "../../LoadingButton/LoadingButton";
 import ResizableBar, { ResizerBarProps } from "../ResizerBar/ResizerBar";
 // React Bootstrap
 import { Card } from "react-bootstrap";
@@ -40,7 +42,6 @@ const ResizableCard: FunctionComponent<ResizableCardProps> = ({
   showResizerBar,
   resizerBarConfig,
 }) => {
-    
   //////////////////////////////
   //          Content         //
   //////////////////////////////
@@ -63,10 +64,7 @@ const ResizableCard: FunctionComponent<ResizableCardProps> = ({
           <div className={styles.buttonHeaderCard}>
             {loadingButtonConfig &&
               loadingButtonConfig.map((config, index) => (
-                <LoadingButton 
-                    key={index} 
-                    {...config} 
-                />
+                <LoadingButton key={index} {...config} />
               ))}
           </div>
         </Card.Header>

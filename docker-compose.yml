@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 services:
   sphinx:
     image: docker.registry.fyrstain.com/software/sphinx/front:latest
@@ -7,11 +7,13 @@ services:
       - REACT_APP_QUESTIONNAIRE_URL=${REACT_APP_QUESTIONNAIRE_URL}
       - REACT_APP_EXTRACTED_URL=${REACT_APP_EXTRACTED_URL}
       - REACT_APP_CQL_URL=${REACT_APP_CQL_URL}
+      - REACT_APP_CDSHOOKS_URL=${REACT_APP_CDSHOOKS_URL}
+      - REACT_APP_TERMINOLOGY_URL=${REACT_APP_TERMINOLOGY_URL}
       - REACT_APP_REDIRECTURI=http://sphinx:3000/
     ports:
       - "${PORT}:${PORT}"
     healthcheck:
-      test: [ "CMD", "wget", "--spider", "http://sphinx:3000/Home" ]
+      test: ["CMD", "wget", "--spider", "http://sphinx:3000/Home"]
       timeout: "300s"
       interval: "30s"
       retries: 3

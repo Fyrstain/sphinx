@@ -2,6 +2,9 @@
 
 Sphinx is a software that display a list a questionnaires and allow users to fill them up
 
+License : Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)  
+Link to more information to the license : [License](./licence.md)
+
 ## Prerequisites
 
 Note: Please ensure you have installed <code><a href="https://nodejs.org/en/download/">node js</a></code>
@@ -110,7 +113,7 @@ done in the background.
 If you want to force the build of the image, use the following command :
 
 ```bash
-docker build -t docker.registry.fyrstain.com/software/sphinx/front:latest --secret id=npmrc,src=C:/Users/lucch/.npmrc --build-arg ARG_PORT=3000 --build-arg ARG_REACT_APP_FHIR_URL=http://localhost:8080/fhir --build-arg ARG_REACT_APP_QUESTIONNAIRE_URL=http://localhost:8080/fhir --build-arg ARG_REACT_APP_DISPLAY_CLIENT_LOGO=false --build-arg ARG_REACT_APP_KEYCLOAK_URL=http://localhost:8999/ --build-arg ARG_REACT_APP_REDIRECTURI=http://localhost:3000/ --build-arg ARG_REACT_APP_KEYCLOAK_REALM=demo --build-arg ARG_REACT_APP_KEYCLOAK_REALM_CLIENT_ID=pandora-demo --build-arg ARG_REACT_APP_KEYCLOAK_FLOW=standard --build-arg ARG_REACT_APP_KEYCLOAK_ONLOAD=check-sso --build-arg ARG_REACT_APP_KEYCLOAK_CHECKSSO_LOGIN_IFRAME=false --build-arg ARG_REACT_APP_KEYCLOAK_CHECKSSO_FALLBACK=false --build-arg ARG_REACT_APP_KEYCLOAK_PKCE_METHOD=S256 --no-cache .
+docker build -t docker.registry.fyrstain.com/software/sphinx/front:latest --secret id=npmrc,src=C:/Users/lucch/.npmrc --build-arg ARG_PORT=3000 --build-arg ARG_REACT_APP_FHIR_URL=http://localhost:8080/fhir --build-arg ARG_REACT_APP_EXTRACTED_URL=http://localhost:8080/fhir --build-arg ARG_REACT_APP_QUESTIONNAIRE_URL=http://localhost:8080/fhir --build-arg ARG_REACT_APP_CDSHOOKS_URL=http://localhost:8080/fhir --build-arg ARG_REACT_APP_TERMINOLOGY_URL=http://localhost:8080/fhir --build-arg ARG_REACT_APP_DISPLAY_CLIENT_LOGO=false --build-arg ARG_REACT_APP_KEYCLOAK_URL=http://localhost:8999/ --build-arg ARG_REACT_APP_REDIRECTURI=http://localhost:3000/ --build-arg ARG_REACT_APP_KEYCLOAK_REALM=demo --build-arg ARG_REACT_APP_KEYCLOAK_REALM_CLIENT_ID=pandora-demo --build-arg ARG_REACT_APP_KEYCLOAK_FLOW=standard --build-arg ARG_REACT_APP_KEYCLOAK_ONLOAD=check-sso --build-arg ARG_REACT_APP_KEYCLOAK_CHECKSSO_LOGIN_IFRAME=false --build-arg ARG_REACT_APP_KEYCLOAK_CHECKSSO_FALLBACK=false --build-arg ARG_REACT_APP_KEYCLOAK_PKCE_METHOD=S256 --no-cache .
 ```
 
 The _build_ command build all images as defined in the docker-compose file. The _--no-cache_ option forces a new
@@ -156,3 +159,14 @@ The import is then made into your Keycloak with the `docker-compose.yml`:
 ```
 
 You should be able to use the users of the realm after the import.
+
+## ECMAScript Lint (ESLint)
+
+Run the following commands in a PowerShell terminal at the root of your project:
+
+- To analyze your whole project:  
+  `npm run lint`
+- To automatically fix simple errors:  
+  `npx eslint . --fix`
+- To automatically fix simple prettier errors if they are not resolved with the previous command:
+  `npx prettier --write .`
