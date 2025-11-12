@@ -1,0 +1,16 @@
+.qrv-toast-container {
+  z-index: 1060 !important;
+  transform: translate(-0.75rem, 5rem);
+}
+
+.qrv-toast {
+  min-width: 28rem;
+  max-width: 32rem;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.qrv-toast-close {
+  z-index: 2;
+}
