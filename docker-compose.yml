@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   sphinx:
     image: docker.registry.fyrstain.com/software/sphinx/front:latest
@@ -9,7 +8,8 @@ services:
       - REACT_APP_CQL_URL=${REACT_APP_CQL_URL}
       - REACT_APP_CDSHOOKS_URL=${REACT_APP_CDSHOOKS_URL}
       - REACT_APP_TERMINOLOGY_URL=${REACT_APP_TERMINOLOGY_URL}
-      - REACT_APP_REDIRECTURI=http://sphinx:3000/
+      - REACT_APP_REDIRECTURI=${REACT_APP_REDIRECTURI}
+      - PUBLIC_URL=${PUBLIC_URL}
     ports:
       - "${PORT}:${PORT}"
     healthcheck:
