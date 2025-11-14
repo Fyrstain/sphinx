@@ -38,7 +38,7 @@ _axios.interceptors.request.use(
 
 const renderApp = () =>
   root.render(
-    <BrowserRouter basename="/sphinx">
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
       <ToastQueueProvider>
         <App />
       </ToastQueueProvider>
