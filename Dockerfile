@@ -64,7 +64,7 @@ RUN apk add --no-cache gettext
 # Write nginx template
 RUN cat <<'EOF' > /tmp/nginx.template
 server {
-    listen 80;
+    listen 3000;
     server_name sphinx;
 
      # Ensure /sphinx (no slash) works
@@ -84,5 +84,5 @@ EOF
 RUN envsubst '${PUBLIC_URL}' < /tmp/nginx.template > /etc/nginx/conf.d/default.conf
 
 COPY --from=build /app/build /usr/share/nginx/html/
-EXPOSE 80
+EXPOSE 3000
 CMD ["nginx", "-g", "daemon off;"]

@@ -1,5 +1,6 @@
 services:
   sphinx:
+    image: docker.registry.fyrstain.com/product/sphinx/front:2.2.0
     build: 
       context: .
       dockerfile: Dockerfile
@@ -32,9 +33,8 @@ services:
       - REACT_APP_CDSHOOKS_URL=${REACT_APP_CDSHOOKS_URL}
       - REACT_APP_TERMINOLOGY_URL=${REACT_APP_TERMINOLOGY_URL}
       - REACT_APP_REDIRECTURI=${REACT_APP_REDIRECTURI}
-      - PUBLIC_URL=${PUBLIC_URL}
     ports:
-      - "${PORT}:80"
+      - "${PORT}:3000"
     healthcheck:
       test: ["CMD", "wget", "--spider", "http://sphinx:3000/Home"]
       timeout: "300s"
