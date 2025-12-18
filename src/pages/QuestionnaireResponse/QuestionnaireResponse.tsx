@@ -115,7 +115,13 @@ const QuestionnaireResponseFiller: FunctionComponent = () => {
         QuestionnaireResponseService.extract(response).then((bundle) => {
           extractedClient.batch({
             body: bundle as FhirResource & { type: "batch" },
-          });
+          }).catch((e) => {
+            //TODO Voir ce qu'on fait ici !
+            console.log(e)
+          });;
+        }).catch((e) => {
+          //TODO Voir ce qu'on fait ici !
+          console.log(e)
         });
 
         setAlert({
