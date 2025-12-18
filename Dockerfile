@@ -50,7 +50,8 @@ ENV REACT_APP_KEYCLOAK_PKCE_METHOD $ARG_REACT_APP_KEYCLOAK_PKCE_METHOD
 # Install dependencies (npm ci makes sure the exact versions in the lockfile gets installed)
 RUN --mount=type=secret,id=npmrc,target=/root/.npmrc npm ci --force
 # Build the app
-RUN npm install -g serve
-# ==== RUN =======
-# Run before launching the server to make sure the environment variables are taken into account
-CMD ["sh", "-c", "npm run build && serve -s build"]
+# RUN npm install -g serve
+# # ==== RUN =======
+# # Run before launching the server to make sure the environment variables are taken into account
+# CMD ["sh", "-c", "npm run build && serve -s build"]
+CMD [ "npm", "run", "start" ]
