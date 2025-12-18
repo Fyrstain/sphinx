@@ -1,6 +1,6 @@
 # ==== CONFIGURE =====
 # Use a Node 16 base image
-FROM node:16-alpine 
+FROM node:16-alpine AS build
 # Set the working directory to /app inside the container
 WORKDIR /app
 # Copy app files
@@ -49,8 +49,40 @@ ENV REACT_APP_KEYCLOAK_PKCE_METHOD $ARG_REACT_APP_KEYCLOAK_PKCE_METHOD
 # ==== BUILD =====
 # Install dependencies (npm ci makes sure the exact versions in the lockfile gets installed)
 RUN --mount=type=secret,id=npmrc,target=/root/.npmrc npm ci --force
-# Build the app
-RUN npm install -g serve
 # ==== RUN =======
 # Run before launching the server to make sure the environment variables are taken into account
-CMD ["sh", "-c", "npm run build && serve -s build"]
+RUN npm run build
+
+# Production Stage
+FROM nginx:stable-alpine AS production
+
+ARG ARG_PUBLIC_URL
+ENV PUBLIC_URL $ARG_PUBLIC_URL
+# Install envsubst
+RUN apk add --no-cache gettext
+
+# Write nginx template
+RUN cat <<'EOF' > /tmp/nginx.template
+server {
+    listen 3000;
+    server_name sphinx;
+
+     # Ensure /sphinx (no slash) works
+    location = ${PUBLIC_URL} {
+        return 301 ${PUBLIC_URL}/;
+    }
+
+    # Serve React SPA under /sphinx/
+    location ${PUBLIC_URL}/ {
+        alias /usr/share/nginx/html/;
+        try_files $uri $uri/ ${PUBLIC_URL}/index.html;
+    }
+}
+EOF
+
+# Expand ${PUBLIC_URL} inside the template
+RUN envsubst '${PUBLIC_URL}' < /tmp/nginx.template > /etc/nginx/conf.d/default.conf
+
+COPY --from=build /app/build /usr/share/nginx/html/
+EXPOSE 3000
+CMD ["nginx", "-g", "daemon off;"]
