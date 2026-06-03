@@ -112,7 +112,7 @@ const QuestionnaireResponseFiller: FunctionComponent = () => {
     fhirClient
       .create({ body: response, resourceType: "QuestionnaireResponse" })
       .then((created) => {
-        QuestionnaireResponseService.extract(response).then((bundle) => {
+        QuestionnaireResponseService.extract(created as QuestionnaireResponse).then((bundle) => {
           extractedClient.batch({
             body: bundle as FhirResource & { type: "batch" },
           }).catch((e) => {
