@@ -5,22 +5,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import SphinxPage from "../../components/SphinxPage/SphinxPage";
 import QuestionnaireService from "../../services/QuestionnaireService";
 // Resources
-import { FhirResource, Questionnaire, QuestionnaireResponse } from "fhir/r5";
+import { FhirResource, QuestionnaireResponse, Questionnaire } from "fhir/r5";
 // Translation
 import i18n from "i18next";
 // FHIR
 import Client from "fhir-kit-client";
 // HL7-Front-Library
-import {
-  QuestionnaireDisplay,
-  Title,
-  ValueSetLoader,
-} from "@fyrstain/hl7-front-library";
+import { QuestionnaireComponent, QuestionnaireDisplay, ValueSetLoader } from "@fyrstain/hl7-front-library";
 import UserService from "../../services/UserService";
-import PatientService, {
-  ResourceSelectItem,
-} from "../../services/PatientService";
-import { Form } from "react-bootstrap";
 import QuestionnaireResponseService from "../../services/QuestionnaireResponseService";
 
 const QuestionnaireResponseFiller: FunctionComponent = () => {
@@ -30,16 +22,12 @@ const QuestionnaireResponseFiller: FunctionComponent = () => {
 
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [patient, setPatient] = useState("");
+  const [questionnaireResource, setQuestionnaireResource] = useState<Questionnaire>();
+  const [questionnaireResponseResource, setQuestionnaireResponseResource] = useState<QuestionnaireResponse>();
+  const [selectedContextReference, setSelectedContextReference] = useState<string>();
 
   // Questionnaire constants
   const { questionnaireId } = useParams();
-  const [patientList, setPatientList] = useState([] as ResourceSelectItem[]);
-  const [questionnaireResource, setQuestionnaireResource] = useState(
-    {} as Questionnaire,
-  );
-  const [questionnaireResponseResource, setQuestionnaireResponseResource] =
-    useState({} as QuestionnaireResponse);
 
   // An alert to display success or error message
   const [alert, setAlert] = useState<{
@@ -80,34 +68,24 @@ const QuestionnaireResponseFiller: FunctionComponent = () => {
   const load = useCallback(async () => {
     try {
       setLoading(true);
-      setPatientList(await PatientService.getPatientList());
+
       const questionnaire = await QuestionnaireService.loadQuestionnaire(
         questionnaireId as string,
       );
       setQuestionnaireResource(questionnaire);
     } catch (error) {
       onError();
-      setLoading(false);
     } finally {
       setLoading(false);
     }
   }, [questionnaireId, onError]);
 
   /**
-   * Returns the list of options for patients.
-   */
-  const getOptions = () => {
-    return patientList.map((patient) => (
-      <option value={patient.value}>{patient.display}</option>
-    ));
-  };
-
-  /**
    * To handle the submit of the QuestionnaireResponse.
    * @param response The QuestionnaireResponse to submit.
    */
   const handleSubmit = (response: QuestionnaireResponse) => {
-    setQuestionnaireResponseResource(response);
+   // setQuestionnaireResponseResource(response);
     response.author = { identifier: { value: UserService.getEmail() } };
     fhirClient
       .create({ body: response, resourceType: "QuestionnaireResponse" })
@@ -140,29 +118,37 @@ const QuestionnaireResponseFiller: FunctionComponent = () => {
       });
   };
 
-  /**
-   * Handle the choice of a patient.
+ /**
+   * Handle to change select context.
    *
    * @param event the change event
    */
-  async function handleChange(
-    event: React.ChangeEvent<HTMLSelectElement>,
-  ): Promise<void> {
-    try {
+const handleContextSelected = async (reference: string) => {
+  try {
       setLoading(true);
+      setSelectedContextReference(reference);
+
+      if (!questionnaireResource) {
+        return;
+      }
+
       const questionnaireResponse = await QuestionnaireService.populate(
         questionnaireResource,
-        event.target.value,
+        reference,
       );
+          console.log("Populate response:", questionnaireResponse);
+          console.log("Questionnaire:", questionnaireResource);
+          console.log(
+      "Questionnaire items:",
+      JSON.stringify(questionnaireResource?.item, null, 2)
+    );
       setQuestionnaireResponseResource(questionnaireResponse);
-      setPatient(event.target.value);
     } catch (error) {
       onError();
-      setLoading(false);
     } finally {
       setLoading(false);
-    }
   }
+};
 
   ///////////////////////////////
   //          Lifecycle        //
@@ -187,26 +173,36 @@ const QuestionnaireResponseFiller: FunctionComponent = () => {
       needsLogin={false}
     >
       <>
-        <Title level={2} content={i18n.t("title.choosepatient")} />
-        <br />
-        <Form.Select
-          value={patient}
-          disabled={patient !== ""}
-          onChange={handleChange}
-        >
-          <option value="">-- {i18n.t("title.choosepatient")} --</option>
-          {getOptions()}
-        </Form.Select>
-        <br />
-
-        {patient !== "" && (
+      {selectedContextReference && (
+        <div className="alert alert-info">
+          Contexte sélectionné : {selectedContextReference}
+        </div>
+      )}
+        <QuestionnaireComponent
+          language={i18n.t}
+          dataUrl={process.env.REACT_APP_FHIR_URL ?? "fhir"}
+          sdcUrl={process.env.REACT_APP_QUESTIONNAIRE_URL ?? "fhir"}
+          terminologyUrl={process.env.REACT_APP_FHIR_URL ?? "fhir"}
+          questionnaireUrl={`${process.env.REACT_APP_QUESTIONNAIRE_CANONICAL_BASE_URL}/${questionnaireId}`}
+          contextSelection={{
+            enabled: selectedContextReference === undefined,
+            title: "Sélectionner un service",
+            displayMode: "modal",
+            resourceTypes: ["Organization", "Patient"],
+          }}
+          populateOnContextSelection={false}
+          onContextSelected={handleContextSelected}
+          onSubmit={handleSubmit}
+          onError={onError}
+        />
+        {questionnaireResource && questionnaireResponseResource && (
           <QuestionnaireDisplay
             language={i18n.t}
             questionnaire={questionnaireResource}
             questionnaireResponse={questionnaireResponseResource}
             valueSetLoader={new ValueSetLoader(fhirClient)}
             onSubmit={handleSubmit}
-            onError={() => {}}
+            onError={onError}
           />
         )}
         {alert && (
