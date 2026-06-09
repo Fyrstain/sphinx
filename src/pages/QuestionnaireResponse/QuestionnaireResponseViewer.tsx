@@ -97,9 +97,56 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
         await QuestionnaireResponseService.loadQuestionnaireResponse(
           questionnaireResponseId as string,
         );
+      
       setQuestionnaireResponseResource(questionnaireResponse);
-      const contained = questionnaireResponse.contained as FhirResource[];
-      const questionnaire = contained[0] as Questionnaire;
+
+      let questionnaire: Questionnaire | undefined;
+
+      if (questionnaireResponse.questionnaire) {
+        const [questionnaireUrl, questionnaireVersion] =
+          questionnaireResponse.questionnaire.split("|");
+
+        const questionnaireSearch = await fhirClient.search({
+          resourceType: "Questionnaire",
+          searchParams: {
+            url: questionnaireUrl,
+            ...(questionnaireVersion ? { version: questionnaireVersion } : {}),
+          },
+        });
+
+        questionnaire = questionnaireSearch.entry?.[0]?.resource as Questionnaire;
+      }
+
+      if (!questionnaire) {
+        const contained = questionnaireResponse.contained as FhirResource[];
+        questionnaire = contained[0] as Questionnaire;
+      }
+
+      const contextReference = questionnaireResponse.subject?.reference;
+
+      if (questionnaire && contextReference) {
+        const removeContextItems = (
+          items: Questionnaire["item"] = [],
+        ): Questionnaire["item"] =>
+          items
+            .filter(
+              (item) =>
+                !item.answerOption?.some(
+                  (answerOption) =>
+                    answerOption.valueReference?.reference === contextReference,
+                ),
+            )
+            .map((item) => ({
+              ...item,
+              item: removeContextItems(item.item),
+            }));
+
+        questionnaire = {
+          ...questionnaire,
+          item: removeContextItems(questionnaire.item),
+        };
+      }
+
       setQuestionnaireResource(questionnaire);
     } catch (error) {
       onError();
@@ -107,7 +154,7 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
     } finally {
       setLoading(false);
     }
-  }, [questionnaireResponseId, onError]);
+  }, [questionnaireResponseId, onError, fhirClient]);
 
   /**
    * To handle the submit of the QuestionnaireResponse.
