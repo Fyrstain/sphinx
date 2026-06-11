@@ -22,7 +22,7 @@
     },
     "testplans": "Test Plan",
     "testscripts": "Test Script",
-    "choosepatient": "Choose a Service"
+    "choosepatient": "Choose a Patient"
   },
   "footer": {
     "items": {

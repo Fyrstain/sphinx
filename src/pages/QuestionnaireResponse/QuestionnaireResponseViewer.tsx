@@ -121,32 +121,6 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
         const contained = questionnaireResponse.contained as FhirResource[];
         questionnaire = contained[0] as Questionnaire;
       }
-
-      const contextReference = questionnaireResponse.subject?.reference;
-
-      if (questionnaire && contextReference) {
-        const removeContextItems = (
-          items: Questionnaire["item"] = [],
-        ): Questionnaire["item"] =>
-          items
-            .filter(
-              (item) =>
-                !item.answerOption?.some(
-                  (answerOption) =>
-                    answerOption.valueReference?.reference === contextReference,
-                ),
-            )
-            .map((item) => ({
-              ...item,
-              item: removeContextItems(item.item),
-            }));
-
-        questionnaire = {
-          ...questionnaire,
-          item: removeContextItems(questionnaire.item),
-        };
-      }
-
       setQuestionnaireResource(questionnaire);
     } catch (error) {
       onError();
@@ -262,12 +236,28 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
             </Toast.Body>
           </Toast>
         </ToastContainer>
-
+        {questionnaireResponseResource.subject?.reference && (
+          <div className="mb-3">
+            <label className="form-label">Ressource sélectionnée</label>
+            <select
+              className="form-select"
+              value={questionnaireResponseResource.subject.reference}
+              disabled
+            >
+              <option value={questionnaireResponseResource.subject.reference}>
+                {questionnaireResponseResource.subject.display ??
+                  questionnaireResponseResource.subject.reference}
+              </option>
+            </select>
+          </div>
+        )}
         <QuestionnaireDisplay
           language={i18n.t}
           questionnaire={questionnaireResource}
           questionnaireResponse={questionnaireResponseResource}
           valueSetLoader={new ValueSetLoader(fhirClient)}
+          readOnly={true}
+          hideContextQuestion={true}
           onSubmit={handleSubmit}
           onError={() => { }}
         />
