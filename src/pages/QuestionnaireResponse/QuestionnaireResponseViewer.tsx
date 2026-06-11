@@ -194,7 +194,7 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
         window.setTimeout(() => setShowCDSToast(false), 20000);
       } catch (error) {
         console.error("CDS Hooks error:", error);
-        onError();
+        // onError();
       }
     };
 
