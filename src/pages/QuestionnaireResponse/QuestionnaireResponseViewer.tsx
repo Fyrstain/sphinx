@@ -11,10 +11,9 @@ import { Toast, ToastContainer } from "react-bootstrap";
 // Components
 import SphinxPage from "../../components/SphinxPage/SphinxPage";
 // Services
+import QuestionnaireService from "../../services/QuestionnaireService";
 import QuestionnaireResponseService from "../../services/QuestionnaireResponseService";
-import CDSHooksService, {
-  CDSHooksContext
-} from "../../services/CDSHooksService";
+import CDSHooksService, { CDSHooksContext } from "../../services/CDSHooksService";
 import UserService from "../../services/UserService";
 // Resources
 import {
@@ -31,7 +30,7 @@ import {
   QuestionnaireDisplay,
   ValueSetLoader,
   CDSCards,
-  CDSCardData
+  CDSCardData,
 } from "@fyrstain/hl7-front-library";
 // CSS
 import "./QuestionnaireResponseViewer.css";
@@ -97,38 +96,35 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
         await QuestionnaireResponseService.loadQuestionnaireResponse(
           questionnaireResponseId as string,
         );
-      
+
       setQuestionnaireResponseResource(questionnaireResponse);
 
-      let questionnaire: Questionnaire | undefined;
+      const containedQuestionnaire = (
+        questionnaireResponse.contained as FhirResource[] | undefined
+      )?.find(
+        (resource): resource is Questionnaire =>
+          resource.resourceType === "Questionnaire",
+      );
 
-      if (questionnaireResponse.questionnaire) {
-        const [questionnaireUrl, questionnaireVersion] =
-          questionnaireResponse.questionnaire.split("|");
+      const questionnaire = questionnaireResponse.questionnaire
+        ? await QuestionnaireService.loadQuestionnaireByCanonical(
+            questionnaireResponse.questionnaire,
+          )
+        : undefined;
 
-        const questionnaireSearch = await fhirClient.search({
-          resourceType: "Questionnaire",
-          searchParams: {
-            url: questionnaireUrl,
-            ...(questionnaireVersion ? { version: questionnaireVersion } : {}),
-          },
-        });
+      const resolvedQuestionnaire = questionnaire ?? containedQuestionnaire;
 
-        questionnaire = questionnaireSearch.entry?.[0]?.resource as Questionnaire;
+      if (!resolvedQuestionnaire) {
+        throw new Error("Questionnaire not found in QuestionnaireResponse");
       }
 
-      if (!questionnaire) {
-        const contained = questionnaireResponse.contained as FhirResource[];
-        questionnaire = contained[0] as Questionnaire;
-      }
-      setQuestionnaireResource(questionnaire);
+      setQuestionnaireResource(resolvedQuestionnaire);
     } catch (error) {
       onError();
-      setLoading(false);
     } finally {
       setLoading(false);
     }
-  }, [questionnaireResponseId, onError, fhirClient]);
+  }, [questionnaireResponseId, onError]);
 
   /**
    * To handle the submit of the QuestionnaireResponse.
@@ -194,12 +190,11 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
         window.setTimeout(() => setShowCDSToast(false), 20000);
       } catch (error) {
         console.error("CDS Hooks error:", error);
-        // onError();
       }
     };
 
     fetchCDSCards();
-  }, [questionnaireResponseResource, onError]);
+  }, [questionnaireResponseResource]);
 
   //////////////////////////////
   //          Content         //
@@ -257,14 +252,13 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
           questionnaireResponse={questionnaireResponseResource}
           valueSetLoader={new ValueSetLoader(fhirClient)}
           readOnly={true}
-          hideContextQuestion={true}
           onSubmit={handleSubmit}
-          onError={() => { }}
         />
         {alert && (
           <div
-            className={`mt-3 alert ${alert.isError ? "alert-danger" : "alert-success"
-              }`}
+            className={`mt-3 alert ${
+              alert.isError ? "alert-danger" : "alert-success"
+            }`}
             role="alert"
           >
             {i18n.t(alert.message)}

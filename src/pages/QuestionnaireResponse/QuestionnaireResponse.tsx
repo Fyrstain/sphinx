@@ -68,15 +68,22 @@ const QuestionnaireResponseFiller: FunctionComponent = () => {
     response: QuestionnaireResponse,
     bundle?: Bundle
   ) => {
-    response.author = { identifier: { value: UserService.getEmail() } };
+    const userEmail = UserService.getEmail();
+    response.author = { identifier: { value: userEmail } };
 
     fhirClient
       .create({ body: response, resourceType: "QuestionnaireResponse" })
       .then((created) => {
         if (bundle) {
+          const normalizedBundle =
+            QuestionnaireResponseService.prepareExtractedBundleForSubmission(
+              bundle,
+              userEmail,
+            );
+
           extractedClient
             .batch({
-              body: bundle as FhirResource & { type: "batch" },
+              body: normalizedBundle as FhirResource & { type: "batch" },
             })
             .catch((e) => {
               //TODO Voir ce qu'on fait ici !
@@ -85,9 +92,15 @@ const QuestionnaireResponseFiller: FunctionComponent = () => {
         } else {
           QuestionnaireResponseService.extract(response)
             .then((extractedBundle) => {
+              const normalizedBundle =
+                QuestionnaireResponseService.prepareExtractedBundleForSubmission(
+                  extractedBundle,
+                  userEmail,
+                );
+
               extractedClient
                 .batch({
-                  body: extractedBundle as FhirResource & { type: "batch" },
+                  body: normalizedBundle as FhirResource & { type: "batch" },
                 })
                 .catch((e) => {
                   //TODO Voir ce qu'on fait ici !
