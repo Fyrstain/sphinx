@@ -28,7 +28,8 @@
     "items": {
       "about": "About",
       "contact": "Contact",
-      "problemtracking": "Problem Tracking"
+      "problemtracking": "Problem Tracking",
+      "implementationguide": "Implementation Guide"
     }
   },
   "button": {
