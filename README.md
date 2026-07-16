@@ -14,8 +14,9 @@ To preview and run the project on your device:
 1. Open project folder in <a href="https://code.visualstudio.com/download">Visual Studio Code</a>
 2. In the terminal, run `npm install`
 3. Run `npm run build` to retrieve images from the library
-4. Run `npm start` to view project in browser
-5. Launch the browser in no-cors mode : perform the command windows + R and enter this line : chrome.exe --user-data-dir="C://Chrome dev session" --disable-web-security, then press the 'Enter' key
+4. Run `npm run dev:ig` to generate the FHIR Implementation Guide and copy it into `public/ig`
+5. Run `npm start` to view project in browser
+6. Launch the browser in no-cors mode : perform the command windows + R and enter this line : chrome.exe --user-data-dir="C://Chrome dev session" --disable-web-security, then press the 'Enter' key
 
 For more information on integrating Nexus with our Maven, npm and Docker projects, please see the Nexus integration guide : <a href="https://github.com/Fyrstain/swf-infrastructure/blob/init/nexus/README.md">Nexus ReadMe</a>
 
@@ -113,7 +114,7 @@ done in the background.
 If you want to force the build of the image, use the following command :
 
 ```bash
-docker build -t docker.registry.fyrstain.com/software/sphinx/front:latest --secret id=npmrc,src=C:/Users/lucch/.npmrc --build-arg ARG_PORT=3000 --build-arg ARG_REACT_APP_FHIR_URL=http://localhost:8080/fhir --build-arg ARG_REACT_APP_EXTRACTED_URL=http://localhost:8080/fhir --build-arg ARG_REACT_APP_QUESTIONNAIRE_URL=http://localhost:8080/fhir --build-arg ARG_REACT_APP_CDSHOOKS_URL=http://localhost:8080/fhir --build-arg ARG_REACT_APP_TERMINOLOGY_URL=http://localhost:8080/fhir --build-arg ARG_PUBLIC_URL=http://localhost:3000/sphinx/ --build-arg ARG_REACT_APP_DISPLAY_CLIENT_LOGO=false --build-arg ARG_REACT_APP_KEYCLOAK_URL=http://localhost:8999/ --build-arg ARG_REACT_APP_REDIRECTURI=http://localhost:3000/ --build-arg ARG_REACT_APP_KEYCLOAK_REALM=demo --build-arg ARG_REACT_APP_KEYCLOAK_REALM_CLIENT_ID=pandora-demo --build-arg ARG_REACT_APP_KEYCLOAK_FLOW=standard --build-arg ARG_REACT_APP_KEYCLOAK_ONLOAD=check-sso --build-arg ARG_REACT_APP_KEYCLOAK_CHECKSSO_LOGIN_IFRAME=false --build-arg ARG_REACT_APP_KEYCLOAK_CHECKSSO_FALLBACK=false --build-arg ARG_REACT_APP_KEYCLOAK_PKCE_METHOD=S256 --no-cache .
+docker build -t docker.registry.fyrstain.com/product/sphinx/front:latest --secret id=npmrc,src=C:/Users/diogo/.npmrc --build-arg ARG_PORT=3000 --build-arg ARG_REACT_APP_FHIR_URL=http://localhost:8080/fhir --build-arg ARG_REACT_APP_EXTRACTED_URL=http://localhost:8080/fhir --build-arg ARG_REACT_APP_QUESTIONNAIRE_URL=http://localhost:8080/fhir --build-arg ARG_REACT_APP_CDSHOOKS_URL=http://localhost:8080/fhir --build-arg ARG_REACT_APP_TERMINOLOGY_URL=http://localhost:8080/fhir --build-arg ARG_PUBLIC_URL=http://localhost:3000/sphinx/ --build-arg ARG_REACT_APP_DISPLAY_CLIENT_LOGO=false --build-arg ARG_REACT_APP_KEYCLOAK_URL=http://localhost:8999/ --build-arg ARG_REACT_APP_REDIRECTURI=http://localhost:3000/ --build-arg ARG_REACT_APP_KEYCLOAK_REALM=demo --build-arg ARG_REACT_APP_KEYCLOAK_REALM_CLIENT_ID=pandora-demo --build-arg ARG_REACT_APP_KEYCLOAK_FLOW=standard --build-arg ARG_REACT_APP_KEYCLOAK_ONLOAD=check-sso --build-arg ARG_REACT_APP_KEYCLOAK_CHECKSSO_LOGIN_IFRAME=false --build-arg ARG_REACT_APP_KEYCLOAK_CHECKSSO_FALLBACK=false --build-arg ARG_REACT_APP_KEYCLOAK_PKCE_METHOD=S256 --no-cache .
 ```
 
 The _build_ command build all images as defined in the docker-compose file. The _--no-cache_ option forces a new
@@ -170,3 +171,22 @@ Run the following commands in a PowerShell terminal at the root of your project:
   `npx eslint . --fix`
 - To automatically fix simple prettier errors if they are not resolved with the previous command:
   `npx prettier --write .`
+
+## FHIR Implementation Guide build
+
+The specification is stored in the `ig/` directory.
+
+Available npm commands:
+
+- `npm run build:ig`: downloads/updates the FHIR IG Publisher and builds the IG from `ig/`.
+- `npm run build:app`: builds the React application only.
+- `npm run copy:ig:public`: copies `ig/output` into `public/ig` for local development.
+- `npm run copy:ig:build`: copies `ig/output` into `build/ig` for production build.
+- `npm run dev:ig`: builds the IG and copies it into `public/ig`.
+- `npm run build`: runs the full production build: IG generation, React build, then IG copy.
+
+When using `npm start`, run `npm run dev:ig` first to make the IG available locally under `public/ig`.
+
+After `npm run build`, the generated application contains the specification under `build/ig`. When the app is served, the IG is available under the same base URL as the application, at `/ig/` or `<PUBLIC_URL>/ig/` when the app is deployed on a sub-path.
+
+The IG build requires Java and internet access at least when the publisher or dependencies need to be updated.

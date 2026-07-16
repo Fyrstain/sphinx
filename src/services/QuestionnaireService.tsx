@@ -30,6 +30,44 @@ async function loadQuestionnaire(
 }
 
 /**
+ * Load Questionnaire from its canonical URL.
+ */
+async function loadQuestionnaireByCanonical(
+  canonical: string,
+): Promise<Questionnaire | undefined> {
+  const [url, version] = canonical.split("|");
+  const searchParams = new URLSearchParams({ url });
+
+  if (version) {
+    searchParams.set("version", version);
+  }
+
+  const response = await fetch(
+    `${
+      process.env.REACT_APP_FHIR_URL ?? "fhir"
+    }/Questionnaire?${searchParams.toString()}`,
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/fhir+json",
+      },
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(`Questionnaire search error: ${response.status}`);
+  }
+
+  const responseBuffer = await response.arrayBuffer();
+  const responseText = new TextDecoder("utf-8").decode(responseBuffer);
+  const bundle = JSON.parse(responseText) as {
+    entry?: Array<{ resource?: Questionnaire }>;
+  };
+
+  return bundle.entry?.[0]?.resource;
+}
+
+/**
  * Create Questionnaire in the FHIR server.
  *
  * @returns the promise of a Questionnaire.
@@ -50,8 +88,7 @@ async function populate(
   questionnaire: Questionnaire,
   subjectID: string,
 ): Promise<QuestionnaireResponse> {
-  // Use the parameter questionnaire
-  let parameter: Parameters = {
+  const parameter: Parameters = {
     resourceType: "Parameters",
     parameter: [
       {
@@ -64,11 +101,12 @@ async function populate(
       },
     ],
   };
+
   return fhirOperationClient.operation({
     name: "populate",
     input: parameter,
     resourceType: "Questionnaire",
-  });
+  }) as Promise<QuestionnaireResponse>;
 }
 
 ///////////////////////////////
@@ -79,6 +117,7 @@ const QuestionnaireService = {
   populate,
   createQuestionnaire,
   loadQuestionnaire,
+  loadQuestionnaireByCanonical,
 };
 
 export default QuestionnaireService;

@@ -23,6 +23,8 @@ import InProgress from "./pages/InProgress/InProgress";
 import QuestionnaireResponseFiller from "./pages/QuestionnaireResponse/QuestionnaireResponse";
 import QuestionnairesResponses from "./pages/QuestionnaireResponse/QuestionnairesResponses";
 import QuestionnaireResponseViewer from "./pages/QuestionnaireResponse/QuestionnaireResponseViewer";
+import { toPublicUrl } from "./services/PublicUrl";
+import ImplementationGuidePage from "./pages/ImplementationGuidePage/ImplementationGuidePage";
 
 require("dayjs/locale/fr");
 
@@ -34,7 +36,7 @@ i18n
     fallbackLng: "en",
     supportedLngs: ["fr", "en"],
     backend: {
-      loadPath: `${process.env.PUBLIC_URL}/locales/{{lng}}/{{ns}}.json`,
+      loadPath: toPublicUrl("/locales/{{lng}}/{{ns}}.json"),
     },
   });
 
@@ -90,6 +92,11 @@ function App() {
         title = "Questionnaires Responses";
         metaDescription = "";
         break;
+      case "/ImplementationGuide":
+      case "/Sphinx/ImplementationGuide":
+        title = `Implementation Guide`;
+        metaDescription = "";
+        break;
     }
 
     if (title) {
@@ -128,6 +135,14 @@ function App() {
       />
       <Route path="/Error" element={<Error />} />
       <Route path="/InProgress" element={<InProgress />} />
+      <Route
+        path="/ImplementationGuide"
+        element={<ImplementationGuidePage />}
+      />
+      <Route
+        path="/Sphinx/ImplementationGuide"
+        element={<ImplementationGuidePage />}
+      />
     </Routes>
   );
 }

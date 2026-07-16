@@ -6,6 +6,7 @@ import { Page, PageConfiguration } from "@fyrstain/hl7-front-library";
 import i18n from "i18next";
 // Authentication
 import UserService from "../../services/UserService";
+import { toPublicUrl } from "../../services/PublicUrl";
 
 const SphinxPage: FunctionComponent<{
   // The title of the page
@@ -52,11 +53,11 @@ const SphinxPage: FunctionComponent<{
       menuItems: [
         {
           title: "QUESTIONNAIRES",
-          link: (process.env.PUBLIC_URL ?? "") + "/Questionnaires",
+          link: toPublicUrl("/Questionnaires"),
         },
         {
           title: "RESPONSES",
-          link: (process.env.PUBLIC_URL ?? "") + "/QuestionnairesResponses",
+          link: toPublicUrl("/QuestionnairesResponses"),
         },
       ],
       // the user items
@@ -64,7 +65,7 @@ const SphinxPage: FunctionComponent<{
       dropDownItems: [
         {
           title: "Admin",
-          link: (process.env.PUBLIC_URL ?? "") + "/InProgress",
+          link: toPublicUrl("/InProgress"),
         },
       ],
     },
@@ -114,16 +115,20 @@ const SphinxPage: FunctionComponent<{
       items: [
         {
           label: i18n.t("footer.items.about"),
-          link: (process.env.PUBLIC_URL ?? "") + "/InProgress",
+          link: toPublicUrl("/InProgress"),
         },
         {
           label: i18n.t("footer.items.contact"),
-          link: (process.env.PUBLIC_URL ?? "") + "/InProgress",
+          link: toPublicUrl("/InProgress"),
         },
         {
           label: i18n.t("footer.items.problemtracking"),
-          link: (process.env.PUBLIC_URL ?? "") + "/InProgress",
+          link: toPublicUrl("/InProgress"),
         },
+        {
+          label: i18n.t("footer.items.implementationguide"),
+          link: toPublicUrl("/ImplementationGuide"),
+      },
       ],
     },
   };
