@@ -39,7 +39,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-     "start": "react-app-rewired start",
+    "start": "react-app-rewired start",
     "start:e2e": "set PORT=4000&& set BROWSER=none&& set REACT_APP_E2E_MODE=true&& react-app-rewired start",
     "build": "npm run build:ig && npm run build:app && npm run copy:ig:build",
     "build:app": "react-app-rewired build",

@@ -1,18 +1,50 @@
 // React
-import { FunctionComponent, useCallback, useState } from "react";
+import {
+  ComponentProps,
+  ComponentType,
+  FunctionComponent,
+  useCallback,
+  useState,
+} from "react";
 import { useNavigate, useParams } from "react-router-dom";
 // Components
 import SphinxPage from "../../components/SphinxPage/SphinxPage";
 // Resources
-import { FhirResource, QuestionnaireResponse, Bundle } from "fhir/r5";
+import { Bundle, FhirResource, QuestionnaireResponse } from "fhir/r5";
 // Translation
 import i18n from "i18next";
 // FHIR
 import Client from "fhir-kit-client";
 // HL7-Front-Library
 import { QuestionnaireComponent } from "@fyrstain/hl7-front-library";
+// Services
 import UserService from "../../services/UserService";
 import QuestionnaireResponseService from "../../services/QuestionnaireResponseService";
+
+/**
+ * Props ajoutées dans la nouvelle implémentation du QuestionnaireComponent,
+ * mais absentes des types actuellement exposés par la librairie.
+ */
+type QuestionnaireWithContextProps = ComponentProps<
+  typeof QuestionnaireComponent
+> & {
+  contextSelection?: {
+    enabled: boolean;
+    title?: string;
+    displayMode?: "modal";
+    searchMode?: "identifier";
+    resourceTypes?: string[];
+  };
+  populateOnContextSelection?: boolean;
+  onContextSelected?: (reference: string) => void;
+};
+
+/**
+ * Adaptation locale du typage du composant.
+ * Cela ne modifie pas la librairie.
+ */
+const QuestionnaireWithContext =
+  QuestionnaireComponent as ComponentType<QuestionnaireWithContextProps>;
 
 const QuestionnaireResponseFiller: FunctionComponent = () => {
   /////////////////////////////////////
@@ -49,7 +81,7 @@ const QuestionnaireResponseFiller: FunctionComponent = () => {
   //////////////////////////////
 
   /**
-   * Navigate to the Error page
+   * Navigate to the Error page.
    */
   const onError = useCallback(() => {
     navigate("/Error");
@@ -61,18 +93,27 @@ const QuestionnaireResponseFiller: FunctionComponent = () => {
 
   /**
    * To handle the submit of the QuestionnaireResponse.
+   *
    * @param response The QuestionnaireResponse to submit.
    * @param bundle The extracted Bundle returned by the library.
    */
   const handleSubmit = (
     response: QuestionnaireResponse,
-    bundle?: Bundle
-  ) => {
+    bundle?: Bundle,
+  ): void => {
     const userEmail = UserService.getEmail();
-    response.author = { identifier: { value: userEmail } };
+
+    response.author = {
+      identifier: {
+        value: userEmail,
+      },
+    };
 
     fhirClient
-      .create({ body: response, resourceType: "QuestionnaireResponse" })
+      .create({
+        body: response,
+        resourceType: "QuestionnaireResponse",
+      })
       .then((created) => {
         if (bundle) {
           const normalizedBundle =
@@ -83,11 +124,13 @@ const QuestionnaireResponseFiller: FunctionComponent = () => {
 
           extractedClient
             .batch({
-              body: normalizedBundle as FhirResource & { type: "batch" },
+              body: normalizedBundle as FhirResource & {
+                type: "batch";
+              },
             })
-            .catch((e) => {
-              //TODO Voir ce qu'on fait ici !
-              console.log(e);
+            .catch((error) => {
+              // TODO Voir ce qu'on fait ici !
+              console.error(error);
             });
         } else {
           QuestionnaireResponseService.extract(response)
@@ -100,16 +143,18 @@ const QuestionnaireResponseFiller: FunctionComponent = () => {
 
               extractedClient
                 .batch({
-                  body: normalizedBundle as FhirResource & { type: "batch" },
+                  body: normalizedBundle as FhirResource & {
+                    type: "batch";
+                  },
                 })
-                .catch((e) => {
-                  //TODO Voir ce qu'on fait ici !
-                  console.log(e);
+                .catch((error) => {
+                  // TODO Voir ce qu'on fait ici !
+                  console.error(error);
                 });
             })
-            .catch((e) => {
-              //TODO Voir ce qu'on fait ici !
-              console.log(e);
+            .catch((error) => {
+              // TODO Voir ce qu'on fait ici !
+              console.error(error);
             });
         }
 
@@ -119,7 +164,7 @@ const QuestionnaireResponseFiller: FunctionComponent = () => {
         });
 
         setTimeout(() => {
-          navigate("/EditQuestionnaire/" + created.id);
+          navigate(`/EditQuestionnaire/${created.id}`);
         }, 3000);
       })
       .catch(() => {
@@ -142,7 +187,7 @@ const QuestionnaireResponseFiller: FunctionComponent = () => {
       needsLogin={false}
     >
       <>
-        <QuestionnaireComponent
+        <QuestionnaireWithContext
           language={i18n.t}
           dataUrl={process.env.REACT_APP_FHIR_URL ?? "fhir"}
           sdcUrl={process.env.REACT_APP_QUESTIONNAIRE_URL ?? "fhir"}

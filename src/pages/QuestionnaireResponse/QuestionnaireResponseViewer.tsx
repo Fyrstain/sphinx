@@ -45,17 +45,19 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
 
   // Questionnaire constants
   const { questionnaireResponseId } = useParams();
-  const [questionnaireResource, setQuestionnaireResource] = useState(
-    {} as Questionnaire,
-  );
+
+  const [questionnaireResource, setQuestionnaireResource] =
+    useState<Questionnaire>({} as Questionnaire);
+
   const [questionnaireResponseResource, setQuestionnaireResponseResource] =
-    useState({} as QuestionnaireResponse);
+    useState<QuestionnaireResponse>({} as QuestionnaireResponse);
 
   // Alerts and cards
   const [alert, setAlert] = useState<{
     message: string;
     isError: boolean;
   } | null>(null);
+
   const [cards, setCards] = useState<CDSCardData[]>([]);
   const [showCDSToast, setShowCDSToast] = useState(false);
 
@@ -71,12 +73,17 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
     [],
   );
 
+  const valueSetLoader = useMemo(
+    () => new ValueSetLoader(fhirClient),
+    [fhirClient],
+  );
+
   //////////////////////////////
   //           Error          //
   //////////////////////////////
 
   /**
-   * Navigate to the Error page
+   * Navigate to the Error page.
    */
   const onError = useCallback(() => {
     navigate("/Error");
@@ -87,14 +94,20 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
   ////////////////////////////////
 
   /**
-   * To load the Questionnaire and use the $populate operation.
+   * Load the Questionnaire and QuestionnaireResponse.
    */
   const load = useCallback(async () => {
+    if (!questionnaireResponseId) {
+      onError();
+      return;
+    }
+
     try {
       setLoading(true);
+
       const questionnaireResponse =
         await QuestionnaireResponseService.loadQuestionnaireResponse(
-          questionnaireResponseId as string,
+          questionnaireResponseId,
         );
 
       setQuestionnaireResponseResource(questionnaireResponse);
@@ -120,6 +133,11 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
 
       setQuestionnaireResource(resolvedQuestionnaire);
     } catch (error) {
+      console.error(
+        "Error while loading QuestionnaireResponse:",
+        error,
+      );
+
       onError();
     } finally {
       setLoading(false);
@@ -127,25 +145,41 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
   }, [questionnaireResponseId, onError]);
 
   /**
-   * To handle the submit of the QuestionnaireResponse.
+   * Handle the submit of the QuestionnaireResponse.
+   *
    * @param response The QuestionnaireResponse to submit.
    */
-  const handleSubmit = (response: QuestionnaireResponse) => {
+  const handleSubmit = (response: QuestionnaireResponse): void => {
     setQuestionnaireResponseResource(response);
+
     response.subject = undefined;
-    response.author = { identifier: { value: UserService.getEmail() } };
+    response.author = {
+      identifier: {
+        value: UserService.getEmail(),
+      },
+    };
+
     fhirClient
-      .create({ body: response, resourceType: "QuestionnaireResponse" })
+      .create({
+        body: response,
+        resourceType: "QuestionnaireResponse",
+      })
       .then(() => {
         setAlert({
           message: "text.successsubmitform",
           isError: false,
         });
+
         setTimeout(() => {
           navigate("/Home");
         }, 3000);
       })
-      .catch(() => {
+      .catch((error) => {
+        console.error(
+          "Error while creating QuestionnaireResponse:",
+          error,
+        );
+
         setAlert({
           message: "text.errorsubmitform",
           isError: true,
@@ -165,17 +199,20 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
   }, [load]);
 
   /**
-   * Load the Questionnaire and QuestionnaireResponse when the questionnaireResponseId changes.
+   * Fetch CDS cards when the QuestionnaireResponse is loaded.
    */
   useEffect(() => {
-    const fetchCDSCards = async () => {
-      if (!questionnaireResponseResource?.id) return;
+    const fetchCDSCards = async (): Promise<void> => {
+      if (!questionnaireResponseResource.id) {
+        return;
+      }
 
       try {
         const context: CDSHooksContext = {
           patientId:
-            questionnaireResponseResource.subject?.reference?.split("/")?.at(1) ??
-            "",
+            questionnaireResponseResource.subject?.reference
+              ?.split("/")
+              .at(1) ?? "",
           studyId: "FLUTE",
           libraryId: "FLUTEPcaInclusionCriteria",
           inclusionExpression: "isIncluded",
@@ -184,10 +221,15 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
           CQLEngineServer: process.env.REACT_APP_CQL_URL,
         };
 
-        const result = await CDSHooksService.callResearchEligibilityCheck(context);
+        const result =
+          await CDSHooksService.callResearchEligibilityCheck(context);
+
         setCards(result);
         setShowCDSToast(true);
-        window.setTimeout(() => setShowCDSToast(false), 20000);
+
+        window.setTimeout(() => {
+          setShowCDSToast(false);
+        }, 20000);
       } catch (error) {
         console.error("CDS Hooks error:", error);
       }
@@ -225,15 +267,19 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
                 onClick={() => setShowCDSToast(false)}
                 aria-label="Close"
                 className="btn-close position-absolute top-0 end-0 m-3 qrv-toast-close"
-              ></button>
+              />
 
               <CDSCards cards={cards} language={i18n.t} />
             </Toast.Body>
           </Toast>
         </ToastContainer>
+
         {questionnaireResponseResource.subject?.reference && (
           <div className="mb-3">
-            <label className="form-label">Ressource sélectionnée</label>
+            <label className="form-label">
+              Ressource sélectionnée
+            </label>
+
             <select
               className="form-select"
               value={questionnaireResponseResource.subject.reference}
@@ -246,14 +292,17 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
             </select>
           </div>
         )}
+
         <QuestionnaireDisplay
           language={i18n.t}
           questionnaire={questionnaireResource}
           questionnaireResponse={questionnaireResponseResource}
-          valueSetLoader={new ValueSetLoader(fhirClient)}
+          valueSetLoader={valueSetLoader}
           readOnly={true}
           onSubmit={handleSubmit}
+          onError={onError}
         />
+
         {alert && (
           <div
             className={`mt-3 alert ${
