@@ -300,7 +300,6 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
           valueSetLoader={valueSetLoader}
           readOnly={true}
           onSubmit={handleSubmit}
-          onError={onError}
         />
 
         {alert && (
