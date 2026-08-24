@@ -40,8 +40,8 @@ const Questionnaires: FunctionComponent = () => {
   //           Error          //
   //////////////////////////////
 
-  const onError = useCallback(() => {
-    navigate("/Error");
+  const onError = useCallback((error?: unknown) => {
+    navigate("/Error", { state: { error } });
   }, [navigate]);
 
   //////////////////////////////
