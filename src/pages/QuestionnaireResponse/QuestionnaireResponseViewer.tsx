@@ -85,8 +85,8 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
   /**
    * Navigate to the Error page.
    */
-  const onError = useCallback(() => {
-    navigate("/Error");
+  const onError = useCallback((error?: unknown) => {
+    navigate("/Error", { state: { error } });
   }, [navigate]);
 
   ////////////////////////////////
@@ -300,7 +300,6 @@ const QuestionnaireResponseViewer: FunctionComponent = () => {
           valueSetLoader={valueSetLoader}
           readOnly={true}
           onSubmit={handleSubmit}
-          onError={onError}
         />
 
         {alert && (

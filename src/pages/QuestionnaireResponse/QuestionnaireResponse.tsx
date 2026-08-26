@@ -89,8 +89,8 @@ const QuestionnaireResponseFiller: FunctionComponent = () => {
   /**
    * Navigate to the Error page.
    */
-  const onError = useCallback(() => {
-    navigate("/Error");
+  const onError = useCallback((error?: unknown) => {
+    navigate("/Error", { state: { error } });
   }, [navigate]);
 
   /**
