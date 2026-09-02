@@ -4,6 +4,7 @@ import {
   ComponentType,
   FunctionComponent,
   useCallback,
+  useEffect,
   useState,
 } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -19,6 +20,7 @@ import Client from "fhir-kit-client";
 import { QuestionnaireComponent } from "@fyrstain/hl7-front-library";
 // Services
 import UserService from "../../services/UserService";
+import QuestionnaireService from "../../services/QuestionnaireService";
 import QuestionnaireResponseService from "../../services/QuestionnaireResponseService";
 
 /**
@@ -56,7 +58,11 @@ const QuestionnaireResponseFiller: FunctionComponent = () => {
   // Questionnaire constants
   const { questionnaireId } = useParams();
 
-  const [loading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [questionnaireUrl, setQuestionnaireUrl] = useState<string>();
+  const [contextResourceTypes, setContextResourceTypes] = useState<string[]>(
+    [],
+  );
 
   // An alert to display success or error message
   const [alert, setAlert] = useState<{
@@ -83,9 +89,60 @@ const QuestionnaireResponseFiller: FunctionComponent = () => {
   /**
    * Navigate to the Error page.
    */
-  const onError = useCallback(() => {
-    navigate("/Error");
+  const onError = useCallback((error?: unknown) => {
+    navigate("/Error", { state: { error } });
   }, [navigate]);
+
+  /**
+   * Load the questionnaire's canonical URL. The route only contains its FHIR id,
+   * whereas the rendering library expects the canonical URL.
+   */
+  useEffect(() => {
+    let isMounted = true;
+
+    if (!questionnaireId) {
+      onError();
+      return () => {
+        isMounted = false;
+      };
+    }
+
+    setLoading(true);
+    setQuestionnaireUrl(undefined);
+    setContextResourceTypes([]);
+
+    const loadCanonicalUrl = async (): Promise<void> => {
+      try {
+        const questionnaire =
+          await QuestionnaireService.loadQuestionnaire(questionnaireId);
+
+        if (!questionnaire.url) {
+          throw new Error("Questionnaire canonical URL is missing");
+        }
+
+        if (isMounted) {
+          setQuestionnaireUrl(questionnaire.url);
+          setContextResourceTypes(questionnaire.subjectType ?? []);
+        }
+      } catch (error) {
+        console.error("Error while loading Questionnaire:", error);
+
+        if (isMounted) {
+          onError();
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    void loadCanonicalUrl();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [onError, questionnaireId]);
 
   ////////////////////////////////
   //           Actions          //
@@ -187,22 +244,24 @@ const QuestionnaireResponseFiller: FunctionComponent = () => {
       needsLogin={false}
     >
       <>
-        <QuestionnaireWithContext
-          language={i18n.t}
-          dataUrl={process.env.REACT_APP_FHIR_URL ?? "fhir"}
-          sdcUrl={process.env.REACT_APP_QUESTIONNAIRE_URL ?? "fhir"}
-          terminologyUrl={process.env.REACT_APP_FHIR_URL ?? "fhir"}
-          questionnaireUrl={`${process.env.REACT_APP_QUESTIONNAIRE_CANONICAL_BASE_URL}/${questionnaireId}`}
-          contextSelection={{
-            enabled: true,
-            title: "Sélectionner un service",
-            displayMode: "modal",
-            resourceTypes: ["Organization"],
-          }}
-          populateOnContextSelection={true}
-          onSubmit={handleSubmit}
-          onError={onError}
-        />
+        {questionnaireUrl && (
+          <QuestionnaireWithContext
+            language={i18n.t}
+            dataUrl={process.env.REACT_APP_FHIR_URL ?? "fhir"}
+            sdcUrl={process.env.REACT_APP_QUESTIONNAIRE_URL ?? "fhir"}
+            terminologyUrl={process.env.REACT_APP_FHIR_URL ?? "fhir"}
+            questionnaireUrl={questionnaireUrl}
+            contextSelection={{
+              enabled: contextResourceTypes.length > 0,
+              title: "Sélectionner un contexte",
+              displayMode: "modal",
+              resourceTypes: contextResourceTypes,
+            }}
+            populateOnContextSelection={true}
+            onSubmit={handleSubmit}
+            onError={onError}
+          />
+        )}
 
         {alert && (
           <div

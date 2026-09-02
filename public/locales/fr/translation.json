@@ -72,5 +72,27 @@
     "disabledplaystructuremap": "Enregistrez ou actualisez pour activer ce bouton",
     "disabledplayquestionnaire": "Activer en cliquant sur le bouton Play de Questionnaire",
     "check": "Valider votre résultat"
+  },
+  "status": {
+    "error": {
+      "oops": "Oups !",
+      "problem": "Un problème est survenu",
+      "details": "Détails techniques",
+      "home": "Retour à l'accueil",
+      "httpStatus": "Statut HTTP : {{status}}",
+      "reason": {
+        "cors": "La requête a été bloquée par la politique d'origine croisée du navigateur.",
+        "network": "Le service est inaccessible. Vérifiez votre connexion puis réessayez.",
+        "unauthorized": "Vous devez vous connecter pour accéder à cette page.",
+        "forbidden": "Vous n'êtes pas autorisé à accéder à cette page.",
+        "not-found": "La page ou la ressource demandée est introuvable.",
+        "server": "Le service a rencontré une erreur inattendue. Réessayez plus tard.",
+        "generic": "Une erreur inattendue est survenue."
+      }
+    },
+    "inProgress": {
+      "prefix": "Travaux en cours !",
+      "content": "Bientôt disponible..."
+    }
   }
 }
