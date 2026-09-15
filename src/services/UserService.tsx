@@ -15,6 +15,11 @@ const keycloakConfig = {
 // Keycloak instance
 const keycloak = new Keycloak(keycloakConfig);
 
+const parseBoolean = (value: string | undefined, defaultValue: boolean): boolean => {
+  if (value === undefined) return defaultValue;
+  return value.trim().toLowerCase() === "true";
+};
+
 ///////////////////////////////
 //        functions          //
 ///////////////////////////////
@@ -33,10 +38,8 @@ const initKeycloak = (onAuthenticatedCallback: any) => {
       pkceMethod: process.env
         .REACT_APP_KEYCLOAK_PKCE_METHOD as KeycloakPkceMethod,
       flow: process.env.REACT_APP_KEYCLOAK_FLOW as KeycloakFlow,
-      silentCheckSsoFallback: process.env
-        .REACT_APP_KEYCLOAK_CHECKSSO_FALLBACK as unknown as boolean,
-      checkLoginIframe: process.env
-        .REACT_APP_KEYCLOAK_CHECKSSO_LOGIN_IFRAME as unknown as boolean,
+      silentCheckSsoFallback: parseBoolean(process.env.REACT_APP_KEYCLOAK_CHECKSSO_FALLBACK, true),
+      checkLoginIframe: parseBoolean(process.env.REACT_APP_KEYCLOAK_CHECKSSO_LOGIN_IFRAME, true),
     })
     .then(() => {
       const postLoginRedirectUri = localStorage.getItem("postLoginRedirectUri");
