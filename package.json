@@ -43,7 +43,7 @@
     "start:e2e": "set PORT=4000&& set BROWSER=none&& set REACT_APP_E2E_MODE=true&& react-app-rewired start",
     "build": "npm run build:ig && npm run build:app && npm run copy:ig:build",
     "build:app": "react-app-rewired build",
-    "build:ig": "cd ig && bash _updatePublisher.sh && bash _genonce.sh",
+    "build:ig": "cd ig && bash _updatePublisher.sh --yes && bash _genonce.sh",
     "copy:ig": "node scripts/copy-ig-output.cjs",
     "copy:ig:build": "node scripts/copy-ig-output.cjs build/ig",
     "copy:ig:public": "node scripts/copy-ig-output.cjs public/ig",
@@ -52,7 +52,7 @@
     "test:e2e": "node scripts/run-e2e.cjs",
     "test:e2e:run": "tsx test/selenium/sphinx.e2e.ts",
     "eject": "react-scripts eject",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx --ignore-pattern \"ig/**\" --ignore-pattern \"build/**\" --ignore-pattern \"public/ig/**\""
   },
   "eslintConfig": {
     "extends": [
