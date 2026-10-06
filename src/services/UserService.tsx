@@ -15,6 +15,8 @@ const keycloakConfig = {
 // Keycloak instance
 const keycloak = new Keycloak(keycloakConfig);
 
+const isE2ETestMode = process.env.NODE_ENV !== "production" && process.env.REACT_APP_E2E_MODE === "true";
+
 const parseBoolean = (value: string | undefined, defaultValue: boolean): boolean => {
   if (value === undefined) return defaultValue;
   return value.trim().toLowerCase() === "true";
@@ -30,6 +32,11 @@ const parseBoolean = (value: string | undefined, defaultValue: boolean): boolean
  * @param onAuthenticatedCallback
  */
 const initKeycloak = (onAuthenticatedCallback: any) => {
+  if (isE2ETestMode) {
+    onAuthenticatedCallback();
+    return;
+  }
+
   keycloak
     .init({
       onLoad: process.env.REACT_APP_KEYCLOAK_ONLOAD as KeycloakOnLoad,
@@ -82,6 +89,8 @@ const getTokenParsed = () => keycloak.tokenParsed;
  * Checks if the user is authenticated
  */
 const isAuthenticated = (): boolean | undefined => {
+  if (isE2ETestMode) return true;
+
   return !!keycloak.token;
 };
 
@@ -113,8 +122,12 @@ const getKC = () => keycloak;
  *
  * @param successCallback
  */
-const updateToken = (successCallback: () => any) =>
-  keycloak.updateToken(300).then(successCallback).catch(doLogin);
+const updateToken = (successCallback: () => any) => {
+  if (isE2ETestMode) return Promise.resolve(successCallback());
+  return keycloak.updateToken(300)
+    .then(successCallback)
+    .catch(doLogin);
+};
 
 ///////////////////////////////
 //        exports            //
