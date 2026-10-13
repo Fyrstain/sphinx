@@ -52,7 +52,8 @@
     "test:e2e": "node scripts/run-e2e.cjs",
     "test:e2e:run": "tsx test/selenium/sphinx.e2e.ts",
     "eject": "react-scripts eject",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx --ignore-pattern \"ig/**\" --ignore-pattern \"build/**\" --ignore-pattern \"public/ig/**\""
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx --ignore-pattern \"ig/**\" --ignore-pattern \"build/**\" --ignore-pattern \"public/ig/**\"",
+    "test:ci": "react-app-rewired test --ci --watchAll=false --runInBand --coverage --coverageReporters=text-summary --coverageReporters=json-summary"
   },
   "eslintConfig": {
     "extends": [
