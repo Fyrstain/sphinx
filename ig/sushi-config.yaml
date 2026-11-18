@@ -4,13 +4,13 @@
 # │  see: https://fshschool.org/docs/sushi/configuration/.                                         │
 # ╰────────────────────────────────────────────────────────────────────────────────────────────────╯
 id: sphinx.ig
-canonical: https://fyrstain.com/fhir/R4/sphinx
-name: IG sphinx
-title: sphinx Guide d'Implémentation
-description: sphinx guide d'implémentation.
+canonical: https://fyrstain.com/fhir/R5/sphinx
+name: SphinxImplementationGuide
+title: Sphinx Implementation Guide
+description: FHIR R5 questionnaire list, response completion, population and extraction workflows.
 status: draft # draft | active | retired | unknown
 version: 0.1.0
-fhirVersion: 4.0.1 # https://www.hl7.org/fhir/valueset-FHIR-version.html
+fhirVersion: 5.0.0 # https://www.hl7.org/fhir/valueset-FHIR-version.html
 copyrightYear: 2026+
 releaseLabel: ci-build
 # license: CC0-1.0 # https://www.hl7.org/fhir/valueset-spdx-license.html
@@ -24,8 +24,7 @@ publisher:
 # package id and the value is the version (or dev/current). For advanced
 # use cases, the value can be an object with keys for id, uri, and version.
 #
-dependencies:
-  ans.fhir.fr.cds: 2.0.0
+dependencies: {} # R5 repository and operations; no R4-only dependency
 #   hl7.fhir.us.mcode:
 #     id: mcode
 #     uri: http://hl7.org/fhir/us/mcode/ImplementationGuide/hl7.fhir.us.mcode
