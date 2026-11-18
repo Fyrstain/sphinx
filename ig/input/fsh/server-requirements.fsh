@@ -17,5 +17,3 @@ Description: "Resource and operation integration prerequisites of the Sphinx que
 * rest[0].resource[1].type = #QuestionnaireResponse
 * rest[0].resource[1].interaction[0].code = #read
 * rest[0].resource[1].interaction[1].code = #search-type
-* rest[0].resource[2].type = #Bundle
-* rest[0].resource[2].interaction[0].code = #read
