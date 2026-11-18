@@ -45,6 +45,10 @@ dependencies: {} # R5 repository and operations; no R4-only dependency
 pages:
   index.md:
     title: Home
+  capabilityStatement.md:
+    title: FHIR server requirements
+  search-parameters-and-operations.md:
+    title: FHIR searches and operations
 #   implementation.xml:
 #   examples.xml:
 #     title: Examples Overview
@@ -75,6 +79,8 @@ pages:
 # ╰────────────────────────────────────────────────────────────────────────────────────────────────╯
 menu:
   Home: index.html
+  FHIR requirements: capabilityStatement.html
+  FHIR searches: search-parameters-and-operations.html
   Artefacts: artifacts.html
 
 # ╭───────────────────────────Less Common Implementation Guide Properties──────────────────────────╮
