@@ -7,7 +7,7 @@ Sphinx is a software that display a list a questionnaires and allow users to fil
 
 ## How to read this Implementation Guide (IG) 
 
- - **[Home](home.html)**: The home page provides the introduction and context for this implementation guide. 
+ - **[Home](index.html)**: The home page provides the introduction and context for this implementation guide. 
 
  - **FHIR Artifacts**: 
     - **[Artifacts](artifacts.html)**: These pages provide detailed descriptions and formal definitions for all FHIR objects defined in this guide.
